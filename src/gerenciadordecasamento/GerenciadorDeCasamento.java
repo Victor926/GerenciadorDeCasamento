@@ -18,7 +18,7 @@ public class GerenciadorDeCasamento {
     private Scanner scanner = new Scanner(System.in);
     PessoaDAO pessoaDAO = new PessoaDAO();
     UsuarioDAO usuarioDAO = new UsuarioDAO();
-    FornecedorDAO fornecedor = new FornecedorDAO();
+    FornecedorDAO fornecedorDAO = new FornecedorDAO();
     
     DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
@@ -84,7 +84,7 @@ public class GerenciadorDeCasamento {
                                     System.out.println("\n\n Opcao Invalida! Tente Novamente!");
                                     break;
                             }
-                        }while (opcaoLogadoNoivo != 8);
+                        }while (opcaoLogadoNoivo != 11);
                         
                     } else {
                         //LOGADO COMO OUTRO
@@ -161,11 +161,11 @@ public class GerenciadorDeCasamento {
         StringBuilder builder = new StringBuilder("");
 
         builder.append("\n\nSEJA BEM VINDO AO GERENCIADOR DE CASAMENTO\n\n");
-        builder.append("\n1 - LOGAR");
-        builder.append("\n2 - ENTRAR SEM LOGAR");
-        builder.append("\n3 - CADASTRAR PESSOA");
-        builder.append("\n4 - CADASTRAR USUARIO");
-        builder.append("\n5 - SAIR\n");
+        builder.append("\n1 - LOGAR..................................");
+        builder.append("\n2 - ENTRAR SEM LOGAR.......................");
+        builder.append("\n3 - CADASTRAR PESSOA.......................");
+        builder.append("\n4 - CADASTRAR USUARIO......................");
+        builder.append("\n5 - SAIR...................................");
         builder.append("\n\n SUA OPCAO: ");
 
         System.out.print(builder.toString());
@@ -189,12 +189,12 @@ public class GerenciadorDeCasamento {
         // NASCIMENTO
         LocalDate dataNascimento = null;
         while (dataNascimento == null) {
-            System.out.println("Qual a data de nascimento: (dd/mm/yyyy)");
+            System.out.println("Qual a data de nascimento: (dd/mm/yyyy):");
             String dataNaoFormatada = scanner.nextLine();
             try {
                 dataNascimento = LocalDate.parse(dataNaoFormatada, formato);
             } catch (DateTimeParseException e) {
-                System.out.println("Data invalida! Tente novamente no formato (dd/mm/yyyy).");
+                System.out.println("Data invalida! Tente novamente no formato (dd/mm/yyyy):");
             }
         }
         p.setDataNascimento(dataNascimento);
@@ -223,9 +223,9 @@ public class GerenciadorDeCasamento {
         Usuario u = new Usuario();
         boolean encontrouId = false;
         Pessoa pessoa = null;
-
+        //VERIFICANDO SE A PESSOA EXISTE
         do {
-            System.out.print("\nPara adicionar um Usuario, é preciso que esse já seja uma pessoa.\n" + 
+            System.out.print("\nPara adicionar um Usuario, eh preciso que esse ja seja uma pessoa.\n" + 
                              "Informe o ID da pessoa: ");
             long idPessoa = scanner.nextLong();
             scanner.nextLine();
@@ -234,14 +234,14 @@ public class GerenciadorDeCasamento {
             if (pessoa != null) {
                 encontrouId = true;
             } else {
-                System.out.println("Pessoa NAO encontrada. Tente novamente.");
+                System.out.println("Pessoa NAO encontrada! Tente novamente!");
             }
         } while (!encontrouId);
-
+        
+        //RECEBENDO ATRIBUTOS
+        //PESSOA
         u.setPessoa(pessoa);
-
-        // RECEBENDO ATRIBUTOS
-        // TIPO
+        //TIPO
         String tipo;
         do {
             System.out.print("Informe o tipo de usuario [N - noivo(a), C - cerimonialista, O - outro]: ");
@@ -249,10 +249,20 @@ public class GerenciadorDeCasamento {
         } while (!tipo.equals("N") && !tipo.equals("C") && !tipo.equals("O"));
         u.setTipo(tipo);
         // LOGIN
-        System.out.print("Qual o login: ");
-        String login = scanner.nextLine();
+        boolean loginDisponivel;
+        String login;
+        do {
+            System.out.print("Qual o login: ");
+            login = scanner.nextLine();
+
+            loginDisponivel = usuarioDAO.buscaPorLogin(login) == null;
+
+            if (!loginDisponivel) {
+                System.out.println("Login ja existe! Tente outro!");
+            }
+        } while (!loginDisponivel);
         u.setLogin(login);
-        // SENHA
+        //SENHA
         System.out.print("Qual a senha: ");
         String senha = scanner.nextLine(); 
         u.setSenha(senha);
@@ -286,15 +296,18 @@ public class GerenciadorDeCasamento {
     private int menuLogadoNoivo() {
         StringBuilder builder = new StringBuilder("");
 
-        builder.append("\n\n VOCE ENTROU LOGADO COMO NOIVO/NOIVA\n\n");
-        builder.append("\n1 - CADASTRAR PESSOA");
-        builder.append("\n2 - CADASTRAR USUARIO");
-        builder.append("\n3 - CADASTRAR FORNECEDOR");
-        builder.append("\n4 - CADASTRAR EVENTO");
-        builder.append("\n5 - CADASTRAR CONVITES");
-        builder.append("\n6 - CADASTRAR PRESENTES");
-        builder.append("\n7 - CADASTRAR PAGAMENTOS");
-        builder.append("\n8 - SAIR\n");
+        builder.append("\n\n VOCE ENTROU LOGADO COMO NOIVO/NOIVA\n");
+        builder.append("\n1 - CADASTRAR PESSOA..................");
+        builder.append("\n2 - CADASTRAR USUARIO.................");
+        builder.append("\n3 - CADASTRAR FORNECEDOR..............");
+        builder.append("\n4 - CADASTRAR EVENTO..................");
+        builder.append("\n5 - CADASTRAR CONVITES................");
+        builder.append("\n6 - CADASTRAR PRESENTES...............");
+        builder.append("\n7 - CADASTRAR PAGAMENTOS..............");
+        builder.append("\n8 - CADASTRAR CERIMONIALISTA..........");
+        builder.append("\n9 - CADASTRAR IGREJA..................");
+        builder.append("\n10 - CADASTRAR CARTORIO...............");
+        builder.append("\n11 - SAIR...........................\n");
         builder.append("\n\n SUA OPCAO: ");
 
         System.out.print(builder.toString());
@@ -310,11 +323,11 @@ public class GerenciadorDeCasamento {
     private int menuLogadoOutro() {
         StringBuilder builder = new StringBuilder("");
 
-        builder.append("\n VOCE ENTROU LOGADO COMO OUTRO\n\n");
+        builder.append("\n\n VOCE ENTROU LOGADO COMO OUTRO\n");
         builder.append("\n VOCE VAI COMPARECER AO EVENTO?");
-        builder.append("\n1 - SIM");
-        builder.append("\n2 - NAO");
-        builder.append("\n3 - SAIR");
+        builder.append("\n1 - SIM........................");
+        builder.append("\n2 - NAO........................");
+        builder.append("\n3 - SAIR.......................");
         builder.append("\n\n SUA OPCAO: ");
         System.out.print(builder.toString());
         
@@ -329,10 +342,10 @@ public class GerenciadorDeCasamento {
     private int menuEntrarSemLogar() {
         StringBuilder builder = new StringBuilder("");
 
-        builder.append("\n VOCE ENTROU SEM LOGAR\n\n");
-        builder.append("\n1 - CADASTRAR PRESENTES");
-        builder.append("\n2 - CADASTRAR RECADO");
-        builder.append("\n3 - SAIR");
+        builder.append("\n\n VOCE ENTROU SEM LOGAR\n");
+        builder.append("\n1 - CADASTRAR PRESENTES......");
+        builder.append("\n2 - CADASTRAR RECADO.........");
+        builder.append("\n3 - SAIR.....................");
         builder.append("\n\n SUA OPCAO: ");
         System.out.print(builder.toString());
         
