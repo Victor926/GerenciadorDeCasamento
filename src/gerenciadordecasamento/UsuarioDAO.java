@@ -13,12 +13,19 @@ public class UsuarioDAO {
     Usuario[] usuarios = new Usuario[100]; 
     
     boolean adiciona(Usuario usuario) {
-        int proximaPosicaoLivre = this.proximaPosicaoLivre();
-        if (proximaPosicaoLivre != -1) {
-            usuarios[proximaPosicaoLivre] = usuario;
-            return true;
+        boolean jaExiste = this.buscarPorId(usuario.getId());
+        if(jaExiste == false){
+            return false;
         }
-        return false;
+        else{
+            int proximaPosicaoLivre = this.proximaPosicaoLivre();
+            if (proximaPosicaoLivre != -1) {
+                usuarios[proximaPosicaoLivre] = usuario;
+                return true;
+            }
+            return false;
+        }
+        
     }
 
     public boolean vazio() {
@@ -90,6 +97,15 @@ public class UsuarioDAO {
             }
         }
         return -1;
+    }
+    
+    public boolean buscarPorId(long id){
+        for (Usuario usuario : usuarios) {
+        if (usuario != null && usuario.getId() == id) { 
+            return true; 
+        }
+    }
+    return false;
     }
 }
 

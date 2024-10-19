@@ -221,61 +221,60 @@ public class GerenciadorDeCasamento {
     public Usuario criarUsuario() {
     
         Usuario u = new Usuario();
-        boolean encontrouId = false;
         Pessoa pessoa = null;
         //VERIFICANDO SE A PESSOA EXISTE
-        do {
             System.out.print("\nPara adicionar um Usuario, eh preciso que esse ja seja uma pessoa.\n" + 
                              "Informe o ID da pessoa: ");
             long idPessoa = scanner.nextLong();
             scanner.nextLine();
             pessoa = pessoaDAO.buscaPorId(idPessoa);
+            
+        if (pessoa != null) {
 
-            if (pessoa != null) {
-                encontrouId = true;
+            //RECEBENDO ATRIBUTOS
+            //PESSOA
+            u.setPessoa(pessoa);
+            //TIPO
+            String tipo;
+            do {
+                System.out.print("Informe o tipo de usuario [N - noivo(a), C - cerimonialista, O - outro]: ");
+                tipo = scanner.nextLine().toUpperCase();
+            } while (!tipo.equals("N") && !tipo.equals("C") && !tipo.equals("O"));
+            u.setTipo(tipo);
+            // LOGIN
+            boolean loginDisponivel;
+            String login;
+            do {
+                System.out.print("Qual o login: ");
+                login = scanner.nextLine();
+
+                loginDisponivel = usuarioDAO.buscaPorLogin(login) == null;
+
+                if (!loginDisponivel) {
+                    System.out.println("Login ja existe! Tente outro!");
+                }
+            } while (!loginDisponivel);
+            u.setLogin(login);
+            //SENHA
+            System.out.print("Qual a senha: ");
+            String senha = scanner.nextLine(); 
+            u.setSenha(senha);
+
+            // ADICIONANDO O USUARIO
+            if (usuarioDAO.adiciona(u)) {
+                System.out.println("\nUsuario Adicionado! \n\n");
+                System.out.println(u.toString());
+                return u;
             } else {
-                System.out.println("Pessoa NAO encontrada! Tente novamente!");
+                System.out.println("\nNAO foi possivel adicionar o usuario! \n\n");
+                return null;
             }
-        } while (!encontrouId);
-        
-        //RECEBENDO ATRIBUTOS
-        //PESSOA
-        u.setPessoa(pessoa);
-        //TIPO
-        String tipo;
-        do {
-            System.out.print("Informe o tipo de usuario [N - noivo(a), C - cerimonialista, O - outro]: ");
-            tipo = scanner.nextLine().toUpperCase();
-        } while (!tipo.equals("N") && !tipo.equals("C") && !tipo.equals("O"));
-        u.setTipo(tipo);
-        // LOGIN
-        boolean loginDisponivel;
-        String login;
-        do {
-            System.out.print("Qual o login: ");
-            login = scanner.nextLine();
-
-            loginDisponivel = usuarioDAO.buscaPorLogin(login) == null;
-
-            if (!loginDisponivel) {
-                System.out.println("Login ja existe! Tente outro!");
-            }
-        } while (!loginDisponivel);
-        u.setLogin(login);
-        //SENHA
-        System.out.print("Qual a senha: ");
-        String senha = scanner.nextLine(); 
-        u.setSenha(senha);
-
-        // ADICIONANDO O USUARIO
-        if (usuarioDAO.adiciona(u)) {
-            System.out.println("\nUsuario Adicionado! \n\n");
-            System.out.println(u.toString());
-            return u;
         } else {
-            System.out.println("\nNAO foi possivel adicionar o usuario! \n\n");
+            System.out.println("Pessoa NAO encontrada! Tente novamente!");
             return null;
         }
+        
+
     }
     
     private Usuario verificarUsuarioLogado() {
