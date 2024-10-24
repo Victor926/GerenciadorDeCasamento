@@ -11,15 +11,22 @@ import java.time.LocalDate;
  * @author victo
  */
 public class Evento {
-    private static long serial;
+    private static long serial = 0;
     private long id;
     private Cerimonial cerimonial;
     private Cartorio cartorio;
+    private Igreja igreja;
     private Pessoa noiva;
     private Pessoa noivo;
     private LocalDate dataCriacao;
     private LocalDate dataModificacao;
 
+    @Override
+    public String toString() {
+        return "Evento{" + "id=" + id + ", cerimonial=" + cerimonial.getNome() + ", cartorio=" + cartorio.getNome() + ", noiva=" + noiva.getNome() + ", noivo=" + noivo.getNome() + ", dataCriacao=" + dataCriacao + ", dataModificacao=" + dataModificacao + '}';
+    }
+
+    
     public static long getSerial() {
         return serial;
     }
@@ -44,6 +51,10 @@ public class Evento {
         return noivo;
     }
 
+    public Igreja getIgreja() {
+        return igreja;
+    }
+
     public LocalDate getDataCriacao() {
         return dataCriacao;
     }
@@ -66,6 +77,10 @@ public class Evento {
 
     public void setCartorio(Cartorio cartorio) {
         this.cartorio = cartorio;
+    }
+
+    public void setIgreja(Igreja igreja) {
+        this.igreja = igreja;
     }
 
     public void setNoiva(Pessoa noiva) {

@@ -13,18 +13,13 @@ public class UsuarioDAO {
     Usuario[] usuarios = new Usuario[100]; 
     
     boolean adiciona(Usuario usuario) {
-        boolean jaExiste = this.buscarPorId(usuario.getId());
-        if(jaExiste == false){
-            return false;
-        }
-        else{
+        
             int proximaPosicaoLivre = this.proximaPosicaoLivre();
             if (proximaPosicaoLivre != -1) {
                 usuarios[proximaPosicaoLivre] = usuario;
                 return true;
             }
             return false;
-        }
         
     }
 

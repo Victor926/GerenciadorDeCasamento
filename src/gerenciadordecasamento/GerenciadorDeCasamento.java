@@ -19,10 +19,30 @@ public class GerenciadorDeCasamento {
     PessoaDAO pessoaDAO = new PessoaDAO();
     UsuarioDAO usuarioDAO = new UsuarioDAO();
     FornecedorDAO fornecedorDAO = new FornecedorDAO();
-    
+    Evento evento = new Evento();
+    int contNoivo = 0;
     DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public GerenciadorDeCasamento() {
+        
+        System.out.println("CRIACAO DO NOIVO...");
+        Pessoa noivo = this.criarPessoa();
+        System.out.println("Qual o login do Noivo?");
+        String loginNoivo = scanner.nextLine();
+        System.out.println("Qual a senha do Noivo?");
+        String senhaNoivo = scanner.nextLine();
+        Usuario usuarioNoivo = new Usuario(noivo, loginNoivo, senhaNoivo);
+        usuarioDAO.adiciona(usuarioNoivo);
+        
+        System.out.println("\n\nCRIACAO DA NOIVA...");
+        Pessoa noiva = this.criarPessoa();
+        System.out.println("Qual o login do Noiva?");
+        String loginNoiva = scanner.nextLine();
+        System.out.println("Qual a senha do Noiva?");
+        String senhaNoiva = scanner.nextLine();
+        Usuario usuarioNoiva = new Usuario(noiva, loginNoiva, senhaNoiva);
+        usuarioDAO.adiciona(usuarioNoiva);
+        
         int opcaoUsuario = 7;
         
         do {
@@ -33,7 +53,7 @@ public class GerenciadorDeCasamento {
                     System.out.println("\n\n Voce escolheu: 1 - LOGAR \n");
                     Usuario logado = this.verificarUsuarioLogado();
                     //LOGADO COMO NOIVO OU CERIMONIALISTA
-                    if (logado != null && (logado.getTipo().equals("N") || logado.getTipo().equals("C") )) {                 
+                    if (logado != null && (logado.getTipo().equals("N") || logado.getTipo().equals("CE") )) {                 
                         int opcaoLogadoNoivo = 10;
                         
                         do {
@@ -54,7 +74,7 @@ public class GerenciadorDeCasamento {
                                     break;
                                 case 4:
                                     System.out.println("\n\n Voce escolheu: 4 - CADASTRAR EVENTO \n");
-                                    //Evento eventoTemporarioLogado = this.criarEvento();
+                                    this.criarEvento();
                                     break;
                                 case 5:
                                     System.out.println("\n\n Voce escolheu: 5 - CADASTRAR CONVITES \n");
@@ -68,18 +88,18 @@ public class GerenciadorDeCasamento {
                                     System.out.println("\n\n Voce escolheu: 7 - CADASTRAR PAGAMENTOS \n");
                                     //Pagamento pagamentoTemporarioLogado = this.criarPagamento();
                                     break;
-                                case 8:
+                                /*case 8:
                                     System.out.println("\n\n Voce escolheu: 8 - CADASTRAR CERIMONIALISTA \n");
-                                    //Cerimonialista cerimonialistaTemporarioLogado = this.criarCerimonialista();
+                                    Cerimonialista cerimonialistaTemporarioLogado = this.criarCerimonialista();
                                     break;
                                 case 9:
                                     System.out.println("\n\n Voce escolheu: 9 - CADASTRAR IGREJA \n");
-                                    //Igreja pagamentoTemporarioLogado = this.criarPagamento();
+                                    Igreja pagamentoTemporarioLogado = this.criarPagamento();
                                     break;
                                 case 10:
                                     System.out.println("\n\n Voce escolheu: 10 - CADASTRAR CARTORIO \n");
-                                    //Pagamento pagamentoTemporarioLogado = this.criarPagamento();
-                                    break;
+                                    Pagamento pagamentoTemporarioLogado = this.criarPagamento();
+                                    break;*/
                                 default:
                                     System.out.println("\n\n Opcao Invalida! Tente Novamente!");
                                     break;
@@ -88,7 +108,7 @@ public class GerenciadorDeCasamento {
                         
                     } else {
                         //LOGADO COMO OUTRO
-                        if (logado != null && logado.getTipo().equals("O")) {
+                        if (logado != null && logado.getTipo().equals("CO")) {
                             int opcaoLogadoOutro = 1;
                             
                             do {
@@ -177,7 +197,7 @@ public class GerenciadorDeCasamento {
             return -1;
         }
     }
-    
+    //============================== CRIAÇÕES ===============================================
     private Pessoa criarPessoa() {
         
         Pessoa p = new Pessoa();
@@ -237,9 +257,9 @@ public class GerenciadorDeCasamento {
             //TIPO
             String tipo;
             do {
-                System.out.print("Informe o tipo de usuario [N - noivo(a), C - cerimonialista, O - outro]: ");
+                System.out.print("Informe o tipo de usuario [N - noivo(a), CE - cerimonialista, CO - Convidado]: ");
                 tipo = scanner.nextLine().toUpperCase();
-            } while (!tipo.equals("N") && !tipo.equals("C") && !tipo.equals("O"));
+            } while (!tipo.equals("N") && !tipo.equals("CE") && !tipo.equals("CO"));
             u.setTipo(tipo);
             // LOGIN
             boolean loginDisponivel;
@@ -303,7 +323,7 @@ public class GerenciadorDeCasamento {
         builder.append("\n5 - CADASTRAR CONVITES................");
         builder.append("\n6 - CADASTRAR PRESENTES...............");
         builder.append("\n7 - CADASTRAR PAGAMENTOS..............");
-        builder.append("\n8 - CADASTRAR CERIMONIALISTA..........");
+        builder.append("\n8 - CADASTRAR CERIMONIAL..............");
         builder.append("\n9 - CADASTRAR IGREJA..................");
         builder.append("\n10 - CADASTRAR CARTORIO...............");
         builder.append("\n11 - SAIR...........................\n");
@@ -396,6 +416,24 @@ public class GerenciadorDeCasamento {
         f.setEstado(estado);
         
         return f;
+    }
+    
+    private void criarEvento(){
+        System.out.println("Qual o nome do cartório?");
+        Cartorio cartorio = new Cartorio(scanner.nextLine());
+        this.evento.setCartorio(cartorio);
+        
+        System.out.println("Qual o nome da Igreja?");
+        Igreja igreja = new Igreja(scanner.nextLine());
+        this.evento.setIgreja(igreja);
+        
+        System.out.println("Qual o nome do Cerimonial?");
+        Cerimonial cerimonial = new Cerimonial(scanner.nextLine());
+        this.evento.setCerimonial(cerimonial);
+        
+        this.evento.setNoivo(usuarioDAO.usuarios[0].getPessoa());
+        this.evento.setNoiva(usuarioDAO.usuarios[1].getPessoa());
+        System.out.println(this.evento);
     }
         
     private boolean validarCnpj(String cnpj) {

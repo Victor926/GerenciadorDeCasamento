@@ -9,6 +9,7 @@ package gerenciadordecasamento;
  * @author victo
  */
 import java.time.LocalDate;
+import java.util.Scanner;
 
 /**
  *
@@ -29,6 +30,16 @@ public class Usuario {
         id = Usuario.serial++;
         this.dataCriacao = LocalDate.now();
         this.dataModificacao = this.dataCriacao;
+    }
+    
+    public Usuario(Pessoa noivo, String login, String senha){
+        id = Usuario.serial++;
+        this.dataCriacao = LocalDate.now();
+        this.dataModificacao = this.dataCriacao;
+        this.pessoa = noivo;
+        this.login = login;
+        this.senha = senha;
+        this.tipo = "N";
     }
 
     public long getId() {

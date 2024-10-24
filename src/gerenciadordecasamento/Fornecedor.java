@@ -11,7 +11,7 @@ import java.time.LocalDate;
  * @author victo
  */
 public class Fornecedor {
-    private static long serial;
+    private static long serial = 0;
     private long id;
     private String nome;
     private String cnpj;
