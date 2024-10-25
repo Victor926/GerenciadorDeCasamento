@@ -5,6 +5,7 @@
 package gerenciadordecasamento;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
@@ -23,7 +24,8 @@ public class Evento {
 
     @Override
     public String toString() {
-        return "Evento{" + "id=" + id + ", cerimonial=" + cerimonial.getNome() + ", cartorio=" + cartorio.getNome() + ", noiva=" + noiva.getNome() + ", noivo=" + noivo.getNome() + ", dataCriacao=" + dataCriacao + ", dataModificacao=" + dataModificacao + '}';
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return "Evento{" + "id=" + id + ", cerimonial=" + cerimonial.getNome() + ", cartorio=" + cartorio.getNome() + ", noiva=" + noiva.getNome() + ", noivo=" + noivo.getNome() + ", dataCriacao=" + dataCriacao.format(formatter) + ", dataModificacao=" + dataModificacao.format(formatter) + '}';
     }
 
     

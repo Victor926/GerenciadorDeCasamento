@@ -78,7 +78,7 @@ public class GerenciadorDeCasamento {
                                     break;
                                 case 5:
                                     System.out.println("\n\n Voce escolheu: 5 - CADASTRAR CONVITES \n");
-                                    //Convite conviteTemporarioLogado = this.criarConvite();
+                                    ConvidadoIndividual conviteTemporarioLogado = this.criarConvite();
                                     break;
                                 case 6:
                                     System.out.println("\n\n Voce escolheu: 6 - CADASTRAR PRESENTES \n");
@@ -449,6 +449,10 @@ public class GerenciadorDeCasamento {
     
     private boolean validarTelefone(String telefone) {
         return telefone != null && telefone.matches("\\d{2}-\\d{5}-\\d{4}");
+    }
+    
+    private ConvidadoIndividual criarConvite(){
+        
     }
     
 }
