@@ -219,13 +219,20 @@ public class GerenciadorDeCasamento {
         }
         p.setDataNascimento(dataNascimento);
        //TELEFONE
-        System.out.println("Qual o telefone (xx-xxxxx-xxxx)");
-        String telefone = scanner.nextLine();
-        if (!telefone.matches("\\d{2}-\\d{5}-\\d{4}")) {
-            System.out.println("Telefone invalido! Use o formato (xx-xxxxx-xxxx):");
-        } else {
-            p.setTelefone(telefone);
-        }
+       String telefone = null;
+       int flag = 0;
+       while(flag == 0)
+       {
+            System.out.println("Qual o telefone (xx-xxxxx-xxxx)");
+            telefone = scanner.nextLine();
+            if (!telefone.matches("\\d{2}-\\d{5}-\\d{4}")) {
+                System.out.println("Telefone invalido! Use o formato (xx-xxxxx-xxxx):");
+            } else {
+                p.setTelefone(telefone);
+                flag = 1;
+            }
+       }
+
         //ADICIONANDO A PESSOA
         if (pessoaDAO.adiciona(p)) {
             System.out.println("\nPessoa Adcionada! \n\n");
