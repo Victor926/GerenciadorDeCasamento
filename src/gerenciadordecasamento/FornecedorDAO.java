@@ -70,6 +70,13 @@ public class FornecedorDAO {
     }
     return null;
 }
+    public void verificarVetorPagamentos(){
+        for (Fornecedor fornecedore : this.fornecedores) {
+            if (fornecedore != null) {
+                fornecedore.verificarPagamento();
+            }
+        }
+    }
 
     
 }

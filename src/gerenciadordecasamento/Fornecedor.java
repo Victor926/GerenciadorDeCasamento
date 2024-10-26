@@ -27,6 +27,12 @@ public class Fornecedor {
         this.dataModificacao = this.dataCriacao;
     }
     
+    public void verificarPagamento(){
+        if(this.pagamento.verificarPagamentoCompleto() == true){
+            this.estado = "Pago";
+        }
+    }
+    
     public long getId() {
         return id;
     }

@@ -23,6 +23,7 @@ public class GerenciadorDeCasamento {
     int contNoivo = 0;
     DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private Calendario calendario = new Calendario();
+    private LocalDate dataVerificar = LocalDate.now();
     public GerenciadorDeCasamento() {
         
         System.out.println("CRIACAO DO NOIVO...");
@@ -43,9 +44,23 @@ public class GerenciadorDeCasamento {
         Usuario usuarioNoiva = new Usuario(noiva, loginNoiva, senhaNoiva);
         usuarioDAO.adiciona(usuarioNoiva);
         
+        //AMBIENTE DE TESTES
+        /*Fornecedor fornecedorTemporarioLogado = this.criarFornecedor();
+        fornecedorDAO.adiciona(fornecedorTemporarioLogado);
+        
+        this.calendario.verificarPagamento(this.dataVerificar.plusMonths(0));
+        this.calendario.verificarPagamento(this.dataVerificar.plusMonths(1));
+        this.calendario.verificarPagamento(this.dataVerificar.plusMonths(1));
+        this.calendario.verificarPagamento(this.dataVerificar.plusMonths(2));
+        System.out.println(this.calendario.toString());
+        this.fornecedorDAO.verificarVetorPagamentos();
+        System.out.println("O estado do pagamento eh: " + this.fornecedorDAO.fornecedores[0].getEstado());
+        
+        System.out.println(this.calendario.toString());*/
         int opcaoUsuario = 7;
         
         do {
+            this.calendario.verificarPagamento(this.dataVerificar);
             opcaoUsuario = this.menuInicial();
             
             switch (opcaoUsuario) {
@@ -71,6 +86,7 @@ public class GerenciadorDeCasamento {
                                 case 3:
                                     System.out.println("\n\n Voce escolheu: 3 - CADASTRAR FORNECEDOR \n");
                                     Fornecedor fornecedorTemporarioLogado = this.criarFornecedor();
+                                    fornecedorDAO.adiciona(fornecedorTemporarioLogado);
                                     break;
                                 case 4:
                                     System.out.println("\n\n Voce escolheu: 4 - CADASTRAR EVENTO \n");
@@ -178,6 +194,7 @@ public class GerenciadorDeCasamento {
     }
     
     public int menuInicial() {
+        this.calendario.verificarPagamento(this.dataVerificar);
         StringBuilder builder = new StringBuilder("");
 
         builder.append("\n\nSEJA BEM VINDO AO GERENCIADOR DE CASAMENTO\n\n");
@@ -533,7 +550,7 @@ public class GerenciadorDeCasamento {
             inserirNoCalendario(pagamentoTemporario);
             pagamentos.adicionar(pagamentoTemporario);
             parcelaAtual++;
-        }while(parcelaAtual < parcelaTotal);
+        }while(parcelaAtual <= parcelaTotal);
         return pagamentos;
     }
         

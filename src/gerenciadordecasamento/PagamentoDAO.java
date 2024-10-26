@@ -22,8 +22,10 @@ public class PagamentoDAO {
         int i = 0;
         int contadorDePago = 0;
         while(i < this.pagamentos.length){
-            if(this.pagamentos[i].isPago()){
+            if(this.pagamentos[i] != null){
+                if(this.pagamentos[i].isPago()){
                 contadorDePago++;
+                }
             }
             i++;
         }
