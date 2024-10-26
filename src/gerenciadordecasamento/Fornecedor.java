@@ -16,7 +16,7 @@ public class Fornecedor {
     private String nome;
     private String cnpj;
     private String telefone;
-    private Pagamento pagamento;
+    private PagamentoDAO pagamento;
     private String estado;
     private LocalDate dataCriacao;
     private LocalDate dataModificacao;
@@ -63,13 +63,11 @@ public class Fornecedor {
         return estado;
     }
 
-    public Pagamento getPagamento() {
-        return pagamento;
+    public void setPagamentoDAO(PagamentoDAO pagamentos) {
+        this.pagamento = pagamentos;
     }
+
     
-    public void setPagamento(Pagamento pagamento) {
-        this.pagamento = pagamento;
-    }
     
     public void setEstado(String estado) {
         this.estado = estado;

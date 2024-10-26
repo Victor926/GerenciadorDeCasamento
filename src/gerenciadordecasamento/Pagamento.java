@@ -13,15 +13,24 @@ public class Pagamento {
     private Pessoa pessoa;
     private String descricao;
     private double valor;
+    private LocalDate dataParcela;
     private int parcelaAtual;
     private int parcelaTotal;
+    private boolean pago;
     private LocalDate dataCriacao;
     private LocalDate dataModificacao;
+  
     
-    public Pagamento(){
+    public Pagamento(Pessoa pessoa, String descricao, double valorParcela, int parcelaTotal, int parcelaAtual, LocalDate dataParcela){
         this.dataCriacao = LocalDate.now();
         this.dataModificacao = this.dataCriacao;
         this.id = ++this.serial;
+        this.descricao = descricao;
+        this.parcelaAtual = parcelaAtual;
+        this.parcelaTotal = parcelaTotal;
+        this.pessoa = pessoa;
+        this.pago = false;
+        this.dataParcela = dataParcela;
     }
 
     public static long getSerial() {
@@ -40,7 +49,27 @@ public class Pagamento {
         return descricao;
     }
 
+    public LocalDate getDataParcela() {
+        return dataParcela;
+    }
 
+    public int getParcelaAtual() {
+        return parcelaAtual;
+    }
+
+    public int getParcelaTotal() {
+        return parcelaTotal;
+    }
+
+    public boolean isPago() {
+        return pago;
+    }
+
+    public void setPago(boolean pago) {
+        this.pago = pago;
+    }
+
+    
     public double getValor() {
         return valor;
     }
@@ -61,16 +90,8 @@ public class Pagamento {
         this.descricao = descricao;
     }
 
-    public void setFornecedor(Fornecedor fornecedor) {
-        this.fornecedor = fornecedor;
-    }
-
     public void setValor(double valor) {
         this.valor = valor;
-    }
-
-    public void setParcela(int parcela) {
-        this.parcela = parcela;
     }
 
     @Override

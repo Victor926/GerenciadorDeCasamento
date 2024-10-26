@@ -86,7 +86,7 @@ public class GerenciadorDeCasamento {
                                     break;
                                 case 7:
                                     System.out.println("\n\n Voce escolheu: 7 - CADASTRAR PAGAMENTOS \n");
-                                    Pagamento pagamentoTemporarioLogado = this.criarPagamento();
+                                    this.criarPagamentoQualquer();
                                     break;
                                 /*case 8:
                                     System.out.println("\n\n Voce escolheu: 8 - CADASTRAR CERIMONIALISTA \n");
@@ -426,7 +426,7 @@ public class GerenciadorDeCasamento {
         }
         f.setEstado(estado);
         
-        f.setPagamento(criarPagamento()); 
+        f.setPagamentoDAO(criarPagamentoFornecedor()); 
         return f;
     }
     
@@ -448,16 +448,28 @@ public class GerenciadorDeCasamento {
         System.out.println(this.evento);
     }
     
-    private Pagamento criarPagamento(){
+    private void criarPagamentoQualquer(){
         System.out.println("O que sera pago?");
         String descricao = scanner.nextLine();
         //perguntar primeiro o valor da parcela para já inserir todas de uma vez no calendário
         System.out.println("Sao quantas parcelas?");
-        Parcela parcelas = new Parcelas()
-        int parcelas = scanner.nextInt();
+        int parcelaTotal = scanner.nextInt();
         
         System.out.println("Qual o valor de cada parcela? Se for unica, qual o valor da parcela unica?");
         double valorParcela = scanner.nextDouble();
+        
+        LocalDate dataParcela = null;
+        while (dataParcela == null) {
+            System.out.println("Qual a data do pagamento da primeira parcela? (dd/mm/yyyy)");
+            String dataNaoFormatada = scanner.nextLine();
+            try {
+                dataParcela = LocalDate.parse(dataNaoFormatada, formato);
+            } catch (DateTimeParseException e) {
+                System.out.println("Data invalida! Tente novamente no formato (dd/mm/yyyy):");
+            }
+        }
+
+
         Pessoa pessoa = null;
         do{
             System.out.println("Qual o id da pessoa a pagar?");
@@ -473,14 +485,60 @@ public class GerenciadorDeCasamento {
         }while(pessoa == null);
         int parcelaAtual = 1;
         do{
-            Pagamento pagamentoTemporario = new Pagamento(pessoa, descricao, valorParcela, parcelas)
-            inserirNoCalendario();
-        }while(parcelaAtual < parcelas);
-        Pagamento pagamento = new Pagamento();
+            Pagamento pagamentoTemporario = new Pagamento(pessoa, descricao, valorParcela, parcelaTotal, parcelaAtual, dataParcela.plusMonths(parcelaAtual - 1));
+            inserirNoCalendario(pagamentoTemporario);
+            parcelaAtual++;
+        }while(parcelaAtual < parcelaTotal);
+    }
+    
+    private PagamentoDAO criarPagamentoFornecedor(){
+        PagamentoDAO pagamentos = new PagamentoDAO();
+        System.out.println("O que sera pago?");
+        String descricao = scanner.nextLine();
+        //perguntar primeiro o valor da parcela para já inserir todas de uma vez no calendário
+        System.out.println("Sao quantas parcelas?");
+        int parcelaTotal = scanner.nextInt();
+        
+        System.out.println("Qual o valor de cada parcela? Se for unica, qual o valor da parcela unica?");
+        double valorParcela = scanner.nextDouble();
+        
+        LocalDate dataParcela = null;
+        while (dataParcela == null) {
+            System.out.println("Qual a data do pagamento da primeira parcela? (dd/mm/yyyy)");
+            String dataNaoFormatada = scanner.nextLine();
+            try {
+                dataParcela = LocalDate.parse(dataNaoFormatada, formato);
+            } catch (DateTimeParseException e) {
+                System.out.println("Data invalida! Tente novamente no formato (dd/mm/yyyy):");
+            }
+        }
+
+
+        Pessoa pessoa = null;
+        do{
+            System.out.println("Qual o id da pessoa a pagar?");
+            long idPessoa = scanner.nextLong();
+            scanner.nextLine();
+            pessoa = pessoaDAO.buscaPorId(idPessoa);
+            if(pessoa != null){
+                System.out.println("Pessoa encontrada!");
+            }
+            else{
+                System.out.println("Id invalido, tente novamente...");
+            }
+        }while(pessoa == null);
+        int parcelaAtual = 1;
+        do{
+            Pagamento pagamentoTemporario = new Pagamento(pessoa, descricao, valorParcela, parcelaTotal, parcelaAtual, dataParcela.plusMonths(parcelaAtual - 1));
+            inserirNoCalendario(pagamentoTemporario);
+            pagamentos.adicionar(pagamentoTemporario);
+            parcelaAtual++;
+        }while(parcelaAtual < parcelaTotal);
+        return pagamentos;
     }
         
-    private void inserirNoCalendario(){
-        this.calendario.adiciona()
+    private void inserirNoCalendario(Pagamento pagamento){
+        this.calendario.adiciona(pagamento);
     }
     private boolean validarCnpj(String cnpj) {
         return cnpj != null && cnpj.matches("\\d{14}");
