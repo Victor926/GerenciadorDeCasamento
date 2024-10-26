@@ -16,8 +16,7 @@ public class Fornecedor {
     private String nome;
     private String cnpj;
     private String telefone;
-    private double valorAPagar;
-    private int parcelas;
+    private Pagamento pagamento;
     private String estado;
     private LocalDate dataCriacao;
     private LocalDate dataModificacao;
@@ -59,28 +58,19 @@ public class Fornecedor {
         this.dataModificacao = LocalDate.now();
     }
 
-    public double getValorAPagar() {
-        return valorAPagar;
-    }
-
-    public void setValorAPagar(double valorAPagar) {
-        this.valorAPagar = valorAPagar;
-        this.dataModificacao = LocalDate.now();
-    }
-
-    public int getParcelas() {
-        return parcelas;
-    }
-
-    public void setParcelas(int parcelar) {
-        this.parcelas = parcelar;
-        this.dataModificacao = LocalDate.now();
-    }
 
     public String getEstado() {
         return estado;
     }
 
+    public Pagamento getPagamento() {
+        return pagamento;
+    }
+    
+    public void setPagamento(Pagamento pagamento) {
+        this.pagamento = pagamento;
+    }
+    
     public void setEstado(String estado) {
         this.estado = estado;
         this.dataModificacao = LocalDate.now();
@@ -96,7 +86,7 @@ public class Fornecedor {
 
     @Override
     public String toString() {
-        return "Esse eh o fornecedor: " + "id=" + id + ", nome=" + nome + ", cnpj=" + cnpj + ", telefone=" + telefone + ", valorAPagar=" + valorAPagar + ", parcelar=" + parcelas + ", estado=" + estado + ", dataCriacao=" + dataCriacao + ", dataModificacao=" + dataModificacao;
+        return "Esse eh o fornecedor: " + "id=" + id + ", nome=" + nome + ", cnpj=" + cnpj + ", telefone=" + telefone + ", estado=" + estado + ", dataCriacao=" + dataCriacao + ", dataModificacao=" + dataModificacao;
     }
 
     @Override

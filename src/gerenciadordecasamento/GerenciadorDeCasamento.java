@@ -22,7 +22,7 @@ public class GerenciadorDeCasamento {
     Evento evento = new Evento();
     int contNoivo = 0;
     DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
+    private Calendario calendario = new Calendario();
     public GerenciadorDeCasamento() {
         
         System.out.println("CRIACAO DO NOIVO...");
@@ -86,7 +86,7 @@ public class GerenciadorDeCasamento {
                                     break;
                                 case 7:
                                     System.out.println("\n\n Voce escolheu: 7 - CADASTRAR PAGAMENTOS \n");
-                                    //Pagamento pagamentoTemporarioLogado = this.criarPagamento();
+                                    Pagamento pagamentoTemporarioLogado = this.criarPagamento();
                                     break;
                                 /*case 8:
                                     System.out.println("\n\n Voce escolheu: 8 - CADASTRAR CERIMONIALISTA \n");
@@ -407,12 +407,16 @@ public class GerenciadorDeCasamento {
             telefone = scanner.nextLine();
         }
         f.setTelefone(telefone);
+        
+        
+        /*
         //VALOR A PAGAR
         System.out.println("\n Qual o valor a pagar: ");
         f.setValorAPagar(scanner.nextInt());
         //PARCELAS
         System.out.println("\n Esse valor vai ser pago em quantas parcelas: ");
         f.setParcelas(scanner.nextInt());
+        */
         //ESTADO
         System.out.println("\n Qual o estado do pagamento? (pago ou em pagamento):");
         String estado = scanner.nextLine().toLowerCase();
@@ -422,6 +426,7 @@ public class GerenciadorDeCasamento {
         }
         f.setEstado(estado);
         
+        f.setPagamento(criarPagamento()); 
         return f;
     }
     
@@ -442,7 +447,41 @@ public class GerenciadorDeCasamento {
         this.evento.setNoiva(usuarioDAO.usuarios[1].getPessoa());
         System.out.println(this.evento);
     }
+    
+    private Pagamento criarPagamento(){
+        System.out.println("O que sera pago?");
+        String descricao = scanner.nextLine();
+        //perguntar primeiro o valor da parcela para já inserir todas de uma vez no calendário
+        System.out.println("Sao quantas parcelas?");
+        Parcela parcelas = new Parcelas()
+        int parcelas = scanner.nextInt();
         
+        System.out.println("Qual o valor de cada parcela? Se for unica, qual o valor da parcela unica?");
+        double valorParcela = scanner.nextDouble();
+        Pessoa pessoa = null;
+        do{
+            System.out.println("Qual o id da pessoa a pagar?");
+            long idPessoa = scanner.nextLong();
+            scanner.nextLine();
+            pessoa = pessoaDAO.buscaPorId(idPessoa);
+            if(pessoa != null){
+                System.out.println("Pessoa encontrada!");
+            }
+            else{
+                System.out.println("Id invalido, tente novamente...");
+            }
+        }while(pessoa == null);
+        int parcelaAtual = 1;
+        do{
+            Pagamento pagamentoTemporario = new Pagamento(pessoa, descricao, valorParcela, parcelas)
+            inserirNoCalendario();
+        }while(parcelaAtual < parcelas);
+        Pagamento pagamento = new Pagamento();
+    }
+        
+    private void inserirNoCalendario(){
+        this.calendario.adiciona()
+    }
     private boolean validarCnpj(String cnpj) {
         return cnpj != null && cnpj.matches("\\d{14}");
     }
