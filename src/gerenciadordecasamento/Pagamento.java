@@ -31,6 +31,7 @@ public class Pagamento {
         this.pessoa = pessoa;
         this.pago = false;
         this.dataParcela = dataParcela;
+        this.valor = valorParcela;
     }
 
     public static long getSerial() {
@@ -60,9 +61,22 @@ public class Pagamento {
     public int getParcelaTotal() {
         return parcelaTotal;
     }
+    
+    public long getIdPessoa(){
+        return this.pessoa.getId();
+    }
 
-    public boolean isPago() {
-        return pago;
+    public String isPago() {
+        if(this.pago){
+            return "pago";
+        }
+        else{
+            return "a pagar";
+        }
+    }
+    
+    public boolean isPagoBoolean(){
+        return this.pago;
     }
 
     public void setPago(boolean pago) {

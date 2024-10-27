@@ -40,14 +40,14 @@ public class GerenciadorDeCasamento {
         Usuario usuarioNoivo = new Usuario(noivo, loginNoivo, senhaNoivo);
         usuarioDAO.adiciona(usuarioNoivo);
         
-       /* System.out.println("\n\nCRIACAO DA NOIVA...");
+        System.out.println("\n\nCRIACAO DA NOIVA...");
         Pessoa noiva = this.criarPessoa();
         System.out.println("\n Qual o login do Noiva:");
         String loginNoiva = scanner.nextLine();
         System.out.println("\n Qual a senha do Noiva:");
         String senhaNoiva = scanner.nextLine();
         Usuario usuarioNoiva = new Usuario(noiva, loginNoiva, senhaNoiva);
-        usuarioDAO.adiciona(usuarioNoiva);*/
+        usuarioDAO.adiciona(usuarioNoiva);
         
         //AMBIENTE DE TESTES
         /*Fornecedor fornecedorTemporarioLogado = this.criarFornecedor();
@@ -59,9 +59,10 @@ public class GerenciadorDeCasamento {
         this.calendario.verificarPagamento(this.dataVerificar.plusMonths(2));
         System.out.println(this.calendario.toString());
         this.fornecedorDAO.verificarVetorPagamentos();
-        System.out.println("O estado do pagamento eh: " + this.fornecedorDAO.fornecedores[0].getEstado());
-        
+        //System.out.println("O estado do pagamento eh: " + this.fornecedorDAO.fornecedores[0].getEstado());
+        System.out.println(this.calendario.relatorioPagamentosNoivos(0, 1));
         System.out.println(this.calendario.toString());*/
+        //fim do ambiente de testes
         int opcaoUsuario = 7;
         
         do {
@@ -122,6 +123,12 @@ public class GerenciadorDeCasamento {
                                         switch(opcMenuRelatorios) {
                                             case 1:
                                                 this.relatorioDeRecados();
+                                                break;
+                                            case 2:
+                                                
+                                            case 4:
+                                                System.out.println(this.calendario.relatorioPagamentosNoivos(0, 1));
+                                                break;
                                             default:
                                                 System.out.println("\n\n Opcao Invalida! Tente Novamente!");
                                                 break;

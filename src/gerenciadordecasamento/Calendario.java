@@ -62,4 +62,25 @@ public class Calendario {
         return " Calendario{" + " dataHoje= " + dataHoje +", pagamentos: " + texto +  '}';
     }
     
+    public String relatorioPagamentosNoivos(long idNoivo, long idNoiva){
+        double valorTotal = 0;
+        String retorno ="Pagamentos realizados pelos noivos: \n";
+        for (Pagamento pagamento : pagamentos) {
+            if(pagamento != null){
+                if(pagamento.getIdPessoa() ==idNoivo || pagamento.getIdPessoa() == idNoiva){
+                    valorTotal += pagamento.getValor();
+                    retorno += " | " + pagamento.getDescricao() + ", parcela atual:" + pagamento.getParcelaAtual() + ", total de parcelas: " + pagamento.getParcelaTotal() + ", situacao do pagamento: " + pagamento.isPago() + "\n";
+                }
+            }   
+        }
+        retorno += "\n Valor total a ser pago: " + valorTotal;
+        if(valorTotal == 0){
+            return "Os noivos nao fizeram nenhum pagamento";
+        }
+        else{
+            return retorno;
+        }
+        
+    }
+    
 }
