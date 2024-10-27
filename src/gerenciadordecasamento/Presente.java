@@ -8,19 +8,20 @@ import java.time.LocalDate;
 
 /**
  *
- * @author Ruam
+ * @author victo
  */
-public class ConvidadoFamilia {
+public class Presente {
     private static long serial = 0;
     private long id;
     private String nome;
-    private String acesso;
+    private String tipo;
+    private double valor;
+    private Pessoa pessoa;
     private LocalDate dataCriacao;
     private LocalDate dataModificacao;
-    
-    
-    public ConvidadoFamilia() {
-        id = this.serial++;
+
+    public Presente() {
+        id = Presente.serial++;
         this.dataCriacao = LocalDate.now();
         this.dataModificacao = this.dataCriacao;
     }
@@ -38,6 +39,33 @@ public class ConvidadoFamilia {
         this.dataModificacao = LocalDate.now();
     }
 
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+        this.dataModificacao = LocalDate.now();
+    }
+
+    public double getValor() {
+        return valor;
+    }
+
+    public void setValor(double valor) {
+        this.valor = valor;
+        this.dataModificacao = LocalDate.now();
+    }
+
+    public Pessoa getPessoa() {
+        return pessoa;
+    }
+
+    public void setPessoa(Pessoa pessoa) {
+        this.pessoa = pessoa;
+        this.dataModificacao = LocalDate.now();
+    }
+
     public LocalDate getDataCriacao() {
         return dataCriacao;
     }
@@ -50,19 +78,11 @@ public class ConvidadoFamilia {
         this.dataModificacao = dataModificacao;
     }
 
-    public String getAcesso() {
-        return acesso;
-    }
-
-    public void setAcesso(String acesso) {
-        this.acesso = acesso;
-        this.dataModificacao = LocalDate.now();
-    }
-
+    
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 41 * hash + (int) (this.id ^ (this.id >>> 32));
+        int hash = 5;
+        hash = 79 * hash + (int) (this.id ^ (this.id >>> 32));
         return hash;
     }
 
@@ -77,13 +97,12 @@ public class ConvidadoFamilia {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final ConvidadoFamilia other = (ConvidadoFamilia) obj;
+        final Presente other = (Presente) obj;
         return this.id == other.id;
     }
 
     @Override
     public String toString() {
-        return "ConvidadoFamilia{" + "id=" + id + ", nome=" + nome + ", acesso=" + acesso + ", dataCriacao=" + dataCriacao + ", dataModificacao=" + dataModificacao + '}';
+        return "Presente{" + "id=" + id + ", nome=" + nome + ", tipo=" + tipo + ", valor=" + valor + ", pessoa=" + pessoa + ", dataCriacao=" + dataCriacao + ", dataModificacao=" + dataModificacao + '}';
     }
-    
 }

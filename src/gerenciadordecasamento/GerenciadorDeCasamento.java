@@ -7,6 +7,7 @@ package gerenciadordecasamento;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -19,31 +20,35 @@ public class GerenciadorDeCasamento {
     PessoaDAO pessoaDAO = new PessoaDAO();
     UsuarioDAO usuarioDAO = new UsuarioDAO();
     FornecedorDAO fornecedorDAO = new FornecedorDAO();
+    RecadoDAO recadoDAO = new RecadoDAO();
+    PresenteDAO presenteDAO = new PresenteDAO();
+    ConvidadoFamiliaDAO convidadoFamiliaDAO = new ConvidadoFamiliaDAO();
+    ConvidadoIndividualDAO convidadoIndividualDAO = new ConvidadoIndividualDAO();
     Evento evento = new Evento();
     int contNoivo = 0;
     DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public GerenciadorDeCasamento() {
         
-        System.out.println("CRIACAO DO NOIVO...");
+        System.out.println("\n CRIACAO DO NOIVO...");
         Pessoa noivo = this.criarPessoa();
-        System.out.println("Qual o login do Noivo?");
+        System.out.println("\n Qual o login do Noivo: ");
         String loginNoivo = scanner.nextLine();
-        System.out.println("Qual a senha do Noivo?");
+        System.out.println("\n Qual a senha do Noivo: ");
         String senhaNoivo = scanner.nextLine();
         Usuario usuarioNoivo = new Usuario(noivo, loginNoivo, senhaNoivo);
         usuarioDAO.adiciona(usuarioNoivo);
         
         System.out.println("\n\nCRIACAO DA NOIVA...");
         Pessoa noiva = this.criarPessoa();
-        System.out.println("Qual o login do Noiva?");
+        System.out.println("\n Qual o login do Noiva:");
         String loginNoiva = scanner.nextLine();
-        System.out.println("Qual a senha do Noiva?");
+        System.out.println("\n Qual a senha do Noiva:");
         String senhaNoiva = scanner.nextLine();
         Usuario usuarioNoiva = new Usuario(noiva, loginNoiva, senhaNoiva);
         usuarioDAO.adiciona(usuarioNoiva);
         
-        int opcaoUsuario = 7;
+        int opcaoUsuario = 0;
         
         do {
             opcaoUsuario = this.menuInicial();
@@ -77,63 +82,81 @@ public class GerenciadorDeCasamento {
                                     this.criarEvento();
                                     break;
                                 case 5:
-                                    System.out.println("\n\n Voce escolheu: 5 - CADASTRAR CONVITES \n");
-                                    ConvidadoIndividual conviteTemporarioLogado = this.criarConvite();
+                                    System.out.println("\n\n Voce escolheu: 5 - CADASTRAR CONVITES INDIVIDUAL\n");
+                                    ConvidadoIndividual conviteTemporarioLogado = this.criarConviteIndividual();
                                     break;
                                 case 6:
-                                    System.out.println("\n\n Voce escolheu: 6 - CADASTRAR PRESENTES \n");
-                                    //Presente presenteTemporarioLogado = this.criarPresente();
+                                    System.out.println("\n\n Voce escolheu: 5 - CADASTRAR CONVITES INDIVIDUAL\n");
+                                    ConvidadoFamilia conviteFamiliaTemporarioLogado = this.criarConviteFamilia();
                                     break;
                                 case 7:
+                                    System.out.println("\n\n Voce escolheu: 6 - CADASTRAR PRESENTES \n");
+                                    Presente presenteTemporarioLogado = this.criarPresente();
+                                    break;
+                                case 8:
                                     System.out.println("\n\n Voce escolheu: 7 - CADASTRAR PAGAMENTOS \n");
                                     //Pagamento pagamentoTemporarioLogado = this.criarPagamento();
                                     break;
-                                /*case 8:
-                                    System.out.println("\n\n Voce escolheu: 8 - CADASTRAR CERIMONIALISTA \n");
-                                    Cerimonialista cerimonialistaTemporarioLogado = this.criarCerimonialista();
-                                    break;
                                 case 9:
-                                    System.out.println("\n\n Voce escolheu: 9 - CADASTRAR IGREJA \n");
-                                    Igreja pagamentoTemporarioLogado = this.criarPagamento();
+                                    System.out.println("\n\n Voce escolheu: 8 - GERAR RELATORIOS E CONVITES\n");
+                                    int opcMenuRelatorios = 0;
+                                    
+                                    do {
+                                        opcMenuRelatorios = this.menuRelatorios();
+                                        switch(opcMenuRelatorios) {
+                                            case 1:
+                                                this.relatorioDeRecados();
+                                            default:
+                                                System.out.println("\n\n Opcao Invalida! Tente Novamente!");
+                                                break;
+                                        }
+                                    }while(opcMenuRelatorios != 7);
+                                    
                                     break;
-                                case 10:
-                                    System.out.println("\n\n Voce escolheu: 10 - CADASTRAR CARTORIO \n");
-                                    Pagamento pagamentoTemporarioLogado = this.criarPagamento();
-                                    break;*/
+                                
                                 default:
                                     System.out.println("\n\n Opcao Invalida! Tente Novamente!");
                                     break;
                             }
-                        }while (opcaoLogadoNoivo != 11);
+                        }while (opcaoLogadoNoivo != 10);
                         
                     } else {
                         //LOGADO COMO OUTRO
-                        if (logado != null && logado.getTipo().equals("CO")) {
-                            int opcaoLogadoOutro = 1;
-                            
-                            do {
-                                //CONFIRMAR PRESENCA
-                                opcaoLogadoOutro = this.menuLogadoOutro();
-                                switch (opcaoLogadoOutro) {
-                                    case 1:
-                                        System.out.println("\n\n Voce CONFIRMOU sua presenca!");
-                                        // FAZER A LOGICA AQUI
-                                        break;
-                                    case 2:
-                                        System.out.println("\n\n Voce NAO vai ao evento!");
-                                        // FAZER A LOGICA AQUI
-                                        break;
-                                    default:
-                                        System.out.println("\n\n Caracter Invalido! Tente Novamente!");
-                                }
-                            }while (opcaoLogadoOutro !=3);
-                        }
-                        else {
-                            System.out.println("\n\n Usuario NAO encontrado!");
-                        }
-                    }
-                    break;
+                        if (logado != null && "CO".equals(logado.getTipo())) {
+                            System.out.println("\nVocê logou como CONVIDADO" +
+                                               "\nVocê pode confirmar a presença" +
+                                               "\nPara isso, informe seu ACESSO: ");
 
+                            String acessoTemporario = scanner.nextLine();
+                            
+                            ConvidadoFamilia familia = convidadoFamiliaDAO.buscarFamilia(acessoTemporario);
+
+                            if (familia != null) {
+                                System.out.println("\nAcesso existe!");
+
+                                int opcaoLogadoOutro = this.menuLogadoOutro();
+        
+                                switch (opcaoLogadoOutro) {
+                                    case 1: // Confirmar presença
+                                        System.out.println("\n\nVocê CONFIRMOU presença da sua família!");
+                                        atualizarPresencaConvidados(familia, true);
+                                        break;
+
+                                    case 2: // Não ir ao evento
+                                        System.out.println("\n\nSua família NÃO vai ao evento!");
+                                        atualizarPresencaConvidados(familia, false);
+                                        break;
+
+                                    default:
+                                    System.out.println("\n\nCaractere Inválido! Tente Novamente!");
+                                }
+                            } 
+                            else {
+                                System.out.println("\nNAO foi encontrado esse ACESSO! Tente Novamente");
+                            }
+                        }
+                        break;
+                }
                 case 2:
                     System.out.println("\n\n Voce escolheu: 2 - ENTAR SEM LOGAR \n");
                     int opcaoEntrarSemLogar = 1;
@@ -144,11 +167,11 @@ public class GerenciadorDeCasamento {
                         switch(opcaoEntrarSemLogar) {
                             case 1:
                             System.out.println("\n\n Voce escolheu: 1 - CADASTRAR PRESENTE \n");
-                            //Presente presenteTemporarioLogado = this.criarPresente();
+                            this.selecionarPresente();
                             break;
                         case 2:
                             System.out.println("\n\n Voce escolheu: 2 - CADASTRAR RECADO \n");
-                            //Pagamento pagamentoTemporarioLogado = this.criarPagamento();
+                            Recado recadoTemporarioSemLogar = this.criarRecado();
                             break;
                         default:
                             System.out.println("\n\n Caracter Invalido! Tente Novamente!");
@@ -327,13 +350,12 @@ public class GerenciadorDeCasamento {
         builder.append("\n2 - CADASTRAR USUARIO.................");
         builder.append("\n3 - CADASTRAR FORNECEDOR..............");
         builder.append("\n4 - CADASTRAR EVENTO..................");
-        builder.append("\n5 - CADASTRAR CONVITES................");
-        builder.append("\n6 - CADASTRAR PRESENTES...............");
-        builder.append("\n7 - CADASTRAR PAGAMENTOS..............");
-        builder.append("\n8 - CADASTRAR CERIMONIAL..............");
-        builder.append("\n9 - CADASTRAR IGREJA..................");
-        builder.append("\n10 - CADASTRAR CARTORIO...............");
-        builder.append("\n11 - SAIR...........................\n");
+        builder.append("\n5 - CADASTRAR CONVITES INDIVIDUAIS....");
+        builder.append("\n6 - CADASTRAR CONVITES FAMILIAS.......");
+        builder.append("\n7 - CADASTRAR PRESENTES...............");
+        builder.append("\n8 - CADASTRAR PAGAMENTOS..............");
+        builder.append("\n9 - GERAR RELATORIOS E CONVITES.......");
+        builder.append("\n10 - SAIR.............................\n");
         builder.append("\n\n SUA OPCAO: ");
 
         System.out.print(builder.toString());
@@ -347,8 +369,7 @@ public class GerenciadorDeCasamento {
     }
     
     private int menuLogadoOutro() {
-        StringBuilder builder = new StringBuilder("");
-
+        StringBuilder builder = new StringBuilder("");       
         builder.append("\n\n VOCE ENTROU LOGADO COMO OUTRO\n");
         builder.append("\n VOCE VAI COMPARECER AO EVENTO?");
         builder.append("\n1 - SIM........................");
@@ -369,9 +390,31 @@ public class GerenciadorDeCasamento {
         StringBuilder builder = new StringBuilder("");
 
         builder.append("\n\n VOCE ENTROU SEM LOGAR\n");
-        builder.append("\n1 - CADASTRAR PRESENTES......");
+        builder.append("\n1 - SELECIONAR PRESENTES......");
         builder.append("\n2 - CADASTRAR RECADO.........");
         builder.append("\n3 - SAIR.....................");
+        builder.append("\n\n SUA OPCAO: ");
+        System.out.print(builder.toString());
+        
+        try {
+            return Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Caracter Invalido! Insira um Numero.");
+            return -1;
+        }
+    }
+    
+    private int menuRelatorios() {
+        StringBuilder builder = new StringBuilder("");
+        
+        builder.append("\n\n MENU RELATORIOS e CONVITES \n");
+        builder.append("\n 1 - LISTA DE RECADOS....................");
+        builder.append("\n 2 - GERAR CONVITE INDIVIDUAL............");
+        builder.append("\n 3 - GERAR CONVITE PARA FAMILIA..........");
+        builder.append("\n 4 - PAGAMENTOS REALIZADOS PELOS NOIVOS..");
+        builder.append("\n 5 - LISTA DE CONVIDADOS.................");
+        builder.append("\n 6 - LISTA DE CONVIDADOS CONFIRMADOS.....");
+        builder.append("\n 7 - SAIR................................");
         builder.append("\n\n SUA OPCAO: ");
         System.out.print(builder.toString());
         
@@ -422,7 +465,15 @@ public class GerenciadorDeCasamento {
         }
         f.setEstado(estado);
         
-        return f;
+        // ADICIONANDO O FORNECEDOR
+        if (fornecedorDAO.adiciona(f)) {
+            System.out.println("\nFornecedor Adicionado! \n\n");
+            System.out.println(f.toString());
+            return f;
+        } else {
+            System.out.println("\nNAO foi possivel adicionar o forncedor! \n\n");
+            return null;
+        }
     }
     
     private void criarEvento(){
@@ -442,7 +493,70 @@ public class GerenciadorDeCasamento {
         this.evento.setNoiva(usuarioDAO.usuarios[1].getPessoa());
         System.out.println(this.evento);
     }
+    
+    private Presente criarPresente() {
         
+        Presente p = new Presente();
+        
+        //RECEBENDO ATRIBUTOS
+        //NOME
+        System.out.println("\n Qual o NOME do PRESENTE: ");
+        p.setNome(scanner.nextLine());
+        //TIPO
+        System.out.println("\n Qual o TIPO do PRESENTE: ");
+        p.setTipo(scanner.nextLine());
+        //VALOR
+        System.out.println("\n Qual o PRECO do PRESENTE: ");
+        String preco = scanner.nextLine();
+        p.setValor(Double.parseDouble(preco));
+        //PESSOA
+        p.setPessoa(null);
+        // ADICIONANDO O PRESENTE
+        if (presenteDAO.adicionar(p)) {
+            System.out.println("\nPRESENTE Adicionado! \n\n");
+            System.out.println(p.toString());
+            return p;
+        } else {
+            System.out.println("\nNAO foi possivel adicionar o PRESENTE! \n\n");
+            return null;
+        }
+    }
+    
+    private Recado criarRecado() {
+        
+        Recado r = new Recado();
+        
+        //RECEBENDO ATRIBUTOS
+        //AUTOR
+        System.out.println("\n De quem eh esse recado: ");
+        String nome = scanner.nextLine();
+        Pessoa pessoaTemporaria = pessoaDAO.buscaPorNome(nome);
+        if (pessoaTemporaria != null) {
+            //TEXTO
+            System.out.println("\n Digite o recado: ");
+            r.setComentario(scanner.nextLine());
+
+            // ADICIONANDO O RECADO
+            if (recadoDAO.adiciona(r)) {
+                System.out.println("\nRecado Adicionado! \n\n");
+                System.out.println(r.toString());
+                return r;
+            } else {
+                System.out.println("\nNAO foi possivel adicionar o recado! \n\n");
+                return null;
+            }
+        }
+        else {
+            System.out.println("\n Essa pessoa NAO foi encontrada! Tente Novamente!");
+            return null;
+        }
+    }
+        
+    public void relatorioDeRecados() {
+        System.out.println("\n\n Voce escolheu ver o relatorio de recados \n");
+        recadoDAO.mostrar();
+    }
+    
     private boolean validarCnpj(String cnpj) {
         return cnpj != null && cnpj.matches("\\d{14}");
     }
@@ -451,8 +565,119 @@ public class GerenciadorDeCasamento {
         return telefone != null && telefone.matches("\\d{2}-\\d{5}-\\d{4}");
     }
     
-    private ConvidadoIndividual criarConvite(){
+    private ConvidadoIndividual criarConviteIndividual() {
+        ConvidadoIndividual ci = new ConvidadoIndividual();
+
+        System.out.print("\nDigite o NOME da pessoa que deseja convidar: ");
+        String nomePessoa = scanner.nextLine();
+
+        Pessoa pessoa = pessoaDAO.buscaPorNome(nomePessoa);
+
+        if (pessoa == null) {
+            System.out.println("\nPESSOA nao encontrada! Tente Novamente!");
+            return null;
+        }
+
+        ci.setPessoa(pessoa);
+
+        //RECEBE O NOME DA FAMILIA
+        System.out.print("\nDigite a FAMILIA dessa pessoa: ");
+        String nomeFamilia = scanner.nextLine();
         
+        ConvidadoFamilia familia = convidadoFamiliaDAO.buscarFamiliaPorNome(nomeFamilia);
+        
+        if (familia == null) {
+            System.out.println("\nFAMILIA nao encontrada! Tente Novamente!");
+            return null;
+        }
+   
+        System.out.print("\nQual o PARENTESCO? ");
+        ci.setParentesco(scanner.nextLine());
+
+        //ADICIONADO O CONVIDADO
+        if (convidadoIndividualDAO.adiciona(ci)) {
+            System.out.println("\n Convidado ADICIONADO!");
+            return ci;
+        } else {
+            System.out.println("\nNAO foi possivel fazer o convite! Tente Novamente!");
+            return null;
+        }    
+    }
+
+    private void selecionarPresente() {
+        
+        Presente p = new Presente();
+        
+        presenteDAO.mostrar();
+        
+        System.out.println("\n Qual presente voce deseja selecionar: ");
+        String nomePresente = scanner.nextLine();
+        System.out.println("\n Qual o nome da pessoa que quer seleciona-lo: ");
+        String nomePessoa = scanner.nextLine();
+        
+        if(presenteDAO.selecionarPresente(nomePresente, nomePessoa, pessoaDAO) == true) {
+            System.out.println(nomePessoa + " voce selecionou o presente: " + nomePresente);
+        }
+        else {
+            System.out.println("\n Tente Novamente!");
+        }
+    }
+
+    private ConvidadoFamilia criarConviteFamilia() {
+        ConvidadoFamilia cf = new ConvidadoFamilia();
+        int cont = 0;
+        //RECDNDO O NOME DA FAMILIA
+        System.out.print("\n Digite o NOME da familia que deseja convidar: ");
+        String nomeFamilia = scanner.nextLine();
+        ConvidadoFamilia familia = convidadoFamiliaDAO.buscarFamiliaPorNome(nomeFamilia);
+        if (familia == null) {
+            //ADICIONADO A FAMILIA
+            ConvidadoFamilia familiaTemporaria = new ConvidadoFamilia();
+            familiaTemporaria.setNome(nomeFamilia);
+            convidadoFamiliaDAO.adiciona(familiaTemporaria);
+            //CRIANDO ACESSO
+            String diaMesAno = String.format("%02d%02d%04d", LocalDate.now().getDayOfMonth(), LocalDate.now().getMonthValue(), LocalDate.now().getYear());
+            String primeiroNomeNoivo = pessoaDAO.pessoas[0].getNome().split(" ")[0];
+            String primeiroNomeNoiva = pessoaDAO.pessoas[1].getNome().split(" ")[0];
+            String letrasAleatorias = letrasAleatorias(3);
+            String acesso = diaMesAno + primeiroNomeNoivo + primeiroNomeNoiva + letrasAleatorias;
+            cf.setAcesso(acesso);
+            if(convidadoFamiliaDAO.adiciona(cf)) {
+                System.out.println("\n FAMILIA convidada! O acesso eh o seguinte: " + acesso);
+                return cf;
+            }
+            else {
+                System.out.println("\n NAO foi possivel adicionar a familia!");
+                return null;
+            }
+            
+        }
+        else {
+            System.out.println("\n Essa FAMILIA ja foi convidada!");
+            return null;
+        }
+          
+    }
+    
+    private String letrasAleatorias(int tamanho) {
+        String alfabeto = "abcdefghijklmnopqrstuvwxyz";
+        Random random = new Random();
+        StringBuilder letras = new StringBuilder();
+        for (int i = 0; i < 3; i++) {
+            int indice = random.nextInt(alfabeto.length());
+            letras.append(alfabeto.charAt(indice));
+        }
+        return letras.toString();
+    }
+    
+    private void atualizarPresencaConvidados(ConvidadoFamilia familia, boolean confirmacao) {
+        ConvidadoIndividual[] convidadosFamilia = convidadoIndividualDAO.buscarConvidadosPorFamilia(familia);
+
+        if (convidadosFamilia != null) {
+            for (ConvidadoIndividual ci : convidadosFamilia) {
+                ci.setConfirmacao(confirmacao);
+            }
+        }
     }
     
 }

@@ -65,7 +65,7 @@ public class PessoaDAO {
     
     Pessoa buscaPorNome(String nome) {
         for (Pessoa p : pessoas) {
-            if (p != null && p.getNome().equals(nome)) {
+            if (p != null && p.getNome().equalsIgnoreCase(nome)) {
                 return p;
             }
         }

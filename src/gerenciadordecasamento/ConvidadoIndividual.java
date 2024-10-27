@@ -57,18 +57,22 @@ public class ConvidadoIndividual {
 
     public void setPessoa(Pessoa pessoa) {
         this.pessoa = pessoa;
+        this.dataModificacao = LocalDate.now();
     }
 
     public void setFamilia(ConvidadoFamilia familia) {
         this.familia = familia;
+        this.dataModificacao = LocalDate.now();
     }
 
     public void setParentesco(String parentesco) {
         this.parentesco = parentesco;
+        this.dataModificacao = LocalDate.now();
     }
 
     public void setConfirmacao(boolean confirmacao) {
         this.confirmacao = confirmacao;
+        this.dataModificacao = LocalDate.now();
     }
 
     @Override
