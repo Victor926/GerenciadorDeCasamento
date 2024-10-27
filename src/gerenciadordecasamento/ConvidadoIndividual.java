@@ -12,7 +12,7 @@ public class ConvidadoIndividual {
     private Pessoa pessoa;
     private ConvidadoFamilia familia;
     private String parentesco;
-    private boolean confirmacao = false;
+    private boolean confirmacao;
     private LocalDate dataCriacao;
     private LocalDate dataModificacao;
     
@@ -96,5 +96,12 @@ public class ConvidadoIndividual {
         final ConvidadoIndividual other = (ConvidadoIndividual) obj;
         return this.id == other.id;
     }
+
+    @Override
+    public String toString() {
+        return "\n Nome: " + pessoa.getNome() + " | Familia: " + familia.getNome();
+    }
+    
+    
     
 }

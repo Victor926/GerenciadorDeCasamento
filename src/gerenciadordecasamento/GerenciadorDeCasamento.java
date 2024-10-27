@@ -5,6 +5,7 @@
 package gerenciadordecasamento;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Random;
@@ -122,18 +123,32 @@ public class GerenciadorDeCasamento {
                                         opcMenuRelatorios = this.menuRelatorios();
                                         switch(opcMenuRelatorios) {
                                             case 1:
-                                                this.relatorioDeRecados();
+                                                recadoDAO.listarRecados();
                                                 break;
                                             case 2:
-                                                
+                                                //GERAR CONVITE INDIVIDUAL
+                                                this.imprimirConviteIndividual();
+                                                break;
+                                            case 3:
+                                                //GERAR CONVITE FAMILIA
+                                                this.imprimirConviteFamilia();
+                                                break;
                                             case 4:
                                                 System.out.println(this.calendario.relatorioPagamentosNoivos(0, 1));
+                                                break;
+                                            case 5:
+                                                //LISTA DE CONVIDADOS
+                                                this.listaConvidados();
+                                                break;
+                                            case 6:
+                                                //LISTA DE CONVIDADOS CONFIRMADOS
+                                                this.gerarRelatorioConvidadosConfirmados();
                                                 break;
                                             default:
                                                 System.out.println("\n\n Opcao Invalida! Tente Novamente!");
                                                 break;
                                         }
-                                    }while(opcMenuRelatorios != 7);
+                                    }while(opcMenuRelatorios != 6);
                                     
                                     break;
                                 
@@ -287,7 +302,7 @@ public class GerenciadorDeCasamento {
 
         //ADICIONANDO A PESSOA
         if (pessoaDAO.adiciona(p)) {
-            System.out.println("\nPessoa Adcionada! \n\n");
+            System.out.println("\nPessoa Adicionada! \n\n");
             System.out.println(p.toString());
             return p;
         } else {
@@ -442,15 +457,14 @@ public class GerenciadorDeCasamento {
         builder.append("\n 3 - GERAR CONVITE PARA FAMILIA..........");
         builder.append("\n 4 - PAGAMENTOS REALIZADOS PELOS NOIVOS..");
         builder.append("\n 5 - LISTA DE CONVIDADOS.................");
-        builder.append("\n 6 - LISTA DE CONVIDADOS CONFIRMADOS.....");
-        builder.append("\n 7 - SAIR................................");
+        builder.append("\n 6 - SAIR................................");
         builder.append("\n\n SUA OPCAO: ");
         System.out.print(builder.toString());
         
         try {
             return Integer.parseInt(scanner.nextLine());
         } catch (NumberFormatException e) {
-            System.out.println("Caracter Invalido! Insira um Numero.");
+            System.out.println("Caracter Invalido! Insira um Numero!");
             return -1;
         }
     }
@@ -464,10 +478,10 @@ public class GerenciadorDeCasamento {
         System.out.println("\n Qual o nome do fornecedor: ");
         f.setNome(scanner.nextLine());
         //CNPJ
-        System.out.println("\n Qual o CNPJ do fornecedor: ");
+        System.out.println("\n Qual o CNPJ do fornecedor,deve haver 14 digitos: ");
         String cnpj = scanner.nextLine();
         while (!validarCnpj(cnpj)) {
-            System.out.println("Esse CNPJ eh invalido. Deve haver 14 digitos. Tente Novamente: ");
+            System.out.println("\n Esse CNPJ eh invalido. Deve haver 14 digitos. Tente Novamente: ");
             cnpj = scanner.nextLine();
         }
         f.setCnpj(cnpj);
@@ -475,7 +489,7 @@ public class GerenciadorDeCasamento {
         System.out.println("\n Qual o telefone do fornecedor (xx-xxxxx-xxxx):");
         String telefone = scanner.nextLine();
         while (!validarTelefone(telefone)) {
-            System.out.println("Esse telefone eh inválido. Tente novamente no seguinte formato (xx-xxxxx-xxxx): ");
+            System.out.println("\n Esse telefone eh inválido. Tente novamente no seguinte formato (xx-xxxxx-xxxx): ");
             telefone = scanner.nextLine();
         }
         f.setTelefone(telefone);
@@ -511,7 +525,7 @@ public class GerenciadorDeCasamento {
     }
     
     private void criarEvento(){
-        System.out.println("Qual o nome do cartório?");
+        System.out.println("Qual o nome do cartorio?");
         Cartorio cartorio = new Cartorio(scanner.nextLine());
         this.evento.setCartorio(cartorio);
         
@@ -591,39 +605,44 @@ public class GerenciadorDeCasamento {
         recadoDAO.mostrar();
     }
     
+    public void listaConvidados() {
+        System.out.println("\n\n Voce escolheu ver a lista de convidados \n");
+        convidadoIndividualDAO.mostrar();
+    }
+    
     private void criarPagamentoQualquer(){
-        System.out.println("O que sera pago?");
+        System.out.println("\n O que sera pago?");
         String descricao = scanner.nextLine();
         //perguntar primeiro o valor da parcela para já inserir todas de uma vez no calendário
-        System.out.println("Sao quantas parcelas?");
+        System.out.println("\n Sao quantas parcelas?");
         int parcelaTotal = scanner.nextInt();
         
-        System.out.println("Qual o valor de cada parcela? Se for unica, qual o valor da parcela unica?");
+        System.out.println("\n Qual o valor de cada parcela? Se for unica, qual o valor da parcela unica?");
         double valorParcela = scanner.nextDouble();
         
         LocalDate dataParcela = null;
         while (dataParcela == null) {
-            System.out.println("Qual a data do pagamento da primeira parcela? (dd/mm/yyyy)");
+            System.out.println("\n Qual a data do pagamento da primeira parcela? (dd/mm/yyyy)");
             String dataNaoFormatada = scanner.nextLine();
             try {
                 dataParcela = LocalDate.parse(dataNaoFormatada, formato);
             } catch (DateTimeParseException e) {
-                System.out.println("Data invalida! Tente novamente no formato (dd/mm/yyyy):");
+                System.out.println("\n Data invalida! Tente novamente no formato (dd/mm/yyyy):");
             }
         }
 
 
         Pessoa pessoa = null;
         do{
-            System.out.println("Qual o id da pessoa a pagar?");
+            System.out.println("\n Qual o id da pessoa a pagar?");
             long idPessoa = scanner.nextLong();
             scanner.nextLine();
             pessoa = pessoaDAO.buscaPorId(idPessoa);
             if(pessoa != null){
-                System.out.println("Pessoa encontrada!");
+                System.out.println("\n Pessoa encontrada!");
             }
             else{
-                System.out.println("Id invalido, tente novamente...");
+                System.out.println("\n Id invalido, tente novamente...");
             }
         }while(pessoa == null);
         int parcelaAtual = 1;
@@ -636,30 +655,30 @@ public class GerenciadorDeCasamento {
     
     private PagamentoDAO criarPagamentoFornecedor(){
         PagamentoDAO pagamentos = new PagamentoDAO();
-        System.out.println("O que sera pago?");
+        System.out.println("\n O que sera pago?");
         String descricao = scanner.nextLine();
         //perguntar primeiro o valor da parcela para já inserir todas de uma vez no calendário
         System.out.println("Sao quantas parcelas?");
         int parcelaTotal = scanner.nextInt();
         
-        System.out.println("Qual o valor de cada parcela? Se for unica, qual o valor da parcela unica?");
+        System.out.println("\n Qual o valor de cada parcela? Se for unica, qual o valor da parcela unica?");
         double valorParcela = scanner.nextDouble();
         
         LocalDate dataParcela = null;
         while (dataParcela == null) {
-            System.out.println("Qual a data do pagamento da primeira parcela? (dd/mm/yyyy)");
+            System.out.println("\n Qual a data do pagamento da primeira parcela? (dd/mm/yyyy)");
             String dataNaoFormatada = scanner.nextLine();
             try {
                 dataParcela = LocalDate.parse(dataNaoFormatada, formato);
             } catch (DateTimeParseException e) {
-                System.out.println("Data invalida! Tente novamente no formato (dd/mm/yyyy):");
+                System.out.println("\n Data invalida! Tente novamente no formato (dd/mm/yyyy):");
             }
         }
 
 
         Pessoa pessoa = null;
         do{
-            System.out.println("Qual o id da pessoa a pagar?");
+            System.out.println("\n Qual o id da pessoa a pagar?");
             long idPessoa = scanner.nextLong();
             scanner.nextLine();
             pessoa = pessoaDAO.buscaPorId(idPessoa);
@@ -807,5 +826,103 @@ public class GerenciadorDeCasamento {
             }
         }
     }
+    
+    public void imprimirConviteIndividual() {
+        System.out.print("Para qual PESSOA deseja imprimir um Convite: ");
+        String nomePessoa = scanner.nextLine();
+        
+        String nomeNoivo = pessoaDAO.pessoas[0].getNome().split(" ")[0];
+        String nomeNoiva = pessoaDAO.pessoas[1].getNome().split(" ")[0];
+        
+        //PROCURAR CONVIDADO
+        ConvidadoIndividual convidado = convidadoIndividualDAO.buscaPorNome(nomePessoa);
+        if (convidado != null) {
+            System.out.println("\n-------------------- CONVITE DE CASAMENTO --------------------");
+            System.out.println("\nCasamento de " + nomeNoivo + " e " + nomeNoiva);
+            System.out.printf ("\nQuerido(a) %s,\n", convidado.getPessoa().getNome());
+            System.out.println("\nConvidamos voce a participar da nossa Celebracao de Casamento!");
+            System.out.println("\nEsperamos voce la!");
+            System.out.println("------------------------------------------------------------\n");
+        } else {
+ 
+            System.out.println("A pessoa não está na lista de convidados individuais.");
+        }
+    }
+
+    public void imprimirConviteFamilia() {
+        System.out.print("Para qual FAMILIA deseja imprimir um Convite: ");
+        String nomeFamilia = scanner.nextLine();
+
+        String nomeNoivo = pessoaDAO.pessoas[0].getNome().split(" ")[0];
+        String nomeNoiva = pessoaDAO.pessoas[1].getNome().split(" ")[0];
+
+        //PROCRUAR FAMILIA CONVIDADA
+        ConvidadoFamilia familia = convidadoFamiliaDAO.buscarFamiliaPorNome(nomeFamilia);
+        String acesso = convidadoFamiliaDAO.buscarAcessoPorFamilia(familia);
+
+        if (familia != null) {
+            System.out.println("\n---------------------- CONVITE DE CASAMENTO ----------------------");
+            System.out.println("\nCasamento de " + nomeNoivo + " e " + nomeNoiva);
+            System.out.printf ("\nQuerida FamIlia %s,\n", familia.getNome());
+            System.out.println("\nConvidamos voces a participarem da nossa Celebracao de Casamento!!");
+            System.out.println("\nEsperamos voces la!");
+            System.out.println("\n\nO codigo de acesso de voces eh: " + acesso);
+            System.out.println("------------------------------------------------------------------\n");
+        } else {
+            System.out.println("A família não está na lista de convidados por família.");
+        }
+    }
+
+    
+    private int calcularIdade(LocalDate dataNascimento) {
+        return Period.between(dataNascimento, LocalDate.now()).getYears();
+    }
+    
+    public void gerarRelatorioConvidadosConfirmados() {
+        ConvidadoIndividual[] convidadosConfirmados = new ConvidadoIndividual[100];
+        convidadosConfirmados = convidadoIndividualDAO.obterConvidadosConfirmados();
+        double totalPontos = 0;
+
+        System.out.println("-------- LISTA DE CONVIDADOS CONFIRMADOS --------:");
+        System.out.println("NOME\t\tIDADE\t\tPONTOS");
+        
+        //LISTAR PESSOAS
+        for (ConvidadoIndividual ci : convidadosConfirmados) {
+            if (ci != null) {
+                Pessoa pessoa = ci.getPessoa();
+                int idade = calcularIdade(pessoa.getDataNascimento());
+
+                double pontos;
+                if (idade <= 8) {
+                    //CRIANCAS QUE NAO CONTAM
+                    pontos = 0;
+                } else if (idade >= 9 && idade <= 13) {
+                    //CRIANCAS QUE CONTAM
+                    pontos = 0.5;
+                } else {
+                    //ADULTOS
+                    pontos = 1.0;
+                }
+
+                System.out.printf("%s\t\t%d\t\t%.1f%n", pessoa.getNome(), idade, pontos);
+                totalPontos += pontos;
+            }
+        }
+
+        //LISTAR FORNECEDORES
+        Fornecedor[] fornecedores = fornecedorDAO.fornecedores;
+        for (Fornecedor f : fornecedores) {
+            if (f != null) {
+                double pontosFornecedor = 0.5;
+                System.out.printf("%s\t\tFORNECEDOR\t%.1f%n", f.getNome(), pontosFornecedor);
+                totalPontos += pontosFornecedor;
+            }
+        }
+
+        System.out.printf("\nPONTUACAO TOTAL: %.1f%n", totalPontos);
+    }
+
+    
+
     
 }

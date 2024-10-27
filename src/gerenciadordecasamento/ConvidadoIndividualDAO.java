@@ -62,6 +62,16 @@ public class ConvidadoIndividualDAO {
         return null;
     }
     
+    public ConvidadoIndividual buscaPorNome(String nome) {
+        for (ConvidadoIndividual ci : convidadosIndividuais) {
+            if (ci != null && ci.getPessoa().getNome().equalsIgnoreCase(nome)) {
+                return ci;
+            }
+        }
+        return null;
+    }
+
+    
     public ConvidadoIndividual[] buscarConvidadosPorFamilia(ConvidadoFamilia familia) {
         ConvidadoIndividual[] convidadosDaFamilia = new ConvidadoIndividual[100];
         int count = 0;
@@ -80,6 +90,25 @@ public class ConvidadoIndividualDAO {
             }
         }
         return convidadosDaFamilia;
+    }
+    
+    public ConvidadoIndividual[] obterConvidadosConfirmados() {
+        ConvidadoIndividual[] convidadosConfirmados = new ConvidadoIndividual[100];
+        int count = 0;
+
+        for (ConvidadoIndividual ci : convidadosIndividuais) {
+            if (ci != null && ci.isConfirmacao() == true) { 
+                if (count < convidadosConfirmados.length) {
+                    convidadosConfirmados[count] = ci;
+                    count++;
+                } else {
+                    System.out.println("Limite de convidados confirmados atingido.");
+                    break;
+                }
+            }
+        }
+
+        return convidadosConfirmados;
     }
     
 }

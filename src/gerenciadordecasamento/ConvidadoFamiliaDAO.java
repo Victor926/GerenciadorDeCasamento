@@ -86,6 +86,13 @@ public class ConvidadoFamiliaDAO {
         return null;
     }
     
+    public String buscarAcessoPorFamilia(ConvidadoFamilia familia) {
+        if (familia != null) {
+            return familia.getAcesso();
+        }
+        return null;
+    }
+    
     public ConvidadoFamilia buscarFamiliaPorNome(String familia) {
         for (ConvidadoFamilia cf : familias) {
             if (cf != null && cf.getNome() != null) {

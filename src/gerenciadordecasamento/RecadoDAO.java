@@ -42,6 +42,26 @@ public class RecadoDAO {
             System.out.println("Nao ha recados cadastrados.");
         }
     }
+    
+    public String listarRecados() {
+        StringBuilder resultado = new StringBuilder();
+        boolean temRecado = false;
+
+        for (Recado r : recados) {
+            if (r != null) {
+                resultado.append("\n De: ").append(r.getPessoa().getNome())
+                        .append("\n ").append(r.getComentario()).append("\n\n");
+                temRecado = true;
+            }
+        }
+
+        if (!temRecado) {
+            resultado.append("Nao ha recados cadastrados.");
+        }
+
+        return resultado.toString();
+    }
+
 
     public int proximaPosicaoLivre() {
         for (int i = 0; i < recados.length; i++) {
