@@ -27,7 +27,8 @@ public class GerenciadorDeCasamento {
     Evento evento = new Evento();
     int contNoivo = 0;
     DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
+    private Calendario calendario = new Calendario();
+    private LocalDate dataVerificar = LocalDate.now();
     public GerenciadorDeCasamento() {
         
         System.out.println("\n CRIACAO DO NOIVO...");
@@ -48,9 +49,23 @@ public class GerenciadorDeCasamento {
         Usuario usuarioNoiva = new Usuario(noiva, loginNoiva, senhaNoiva);
         usuarioDAO.adiciona(usuarioNoiva);
         
-        int opcaoUsuario = 0;
+        //AMBIENTE DE TESTES
+        /*Fornecedor fornecedorTemporarioLogado = this.criarFornecedor();
+        fornecedorDAO.adiciona(fornecedorTemporarioLogado);
+        
+        this.calendario.verificarPagamento(this.dataVerificar.plusMonths(0));
+        this.calendario.verificarPagamento(this.dataVerificar.plusMonths(1));
+        this.calendario.verificarPagamento(this.dataVerificar.plusMonths(1));
+        this.calendario.verificarPagamento(this.dataVerificar.plusMonths(2));
+        System.out.println(this.calendario.toString());
+        this.fornecedorDAO.verificarVetorPagamentos();
+        System.out.println("O estado do pagamento eh: " + this.fornecedorDAO.fornecedores[0].getEstado());
+        
+        System.out.println(this.calendario.toString());*/
+        int opcaoUsuario = 7;
         
         do {
+            this.calendario.verificarPagamento(this.dataVerificar);
             opcaoUsuario = this.menuInicial();
             
             switch (opcaoUsuario) {
@@ -76,6 +91,7 @@ public class GerenciadorDeCasamento {
                                 case 3:
                                     System.out.println("\n\n Voce escolheu: 3 - CADASTRAR FORNECEDOR \n");
                                     Fornecedor fornecedorTemporarioLogado = this.criarFornecedor();
+                                    fornecedorDAO.adiciona(fornecedorTemporarioLogado);
                                     break;
                                 case 4:
                                     System.out.println("\n\n Voce escolheu: 4 - CADASTRAR EVENTO \n");
@@ -95,7 +111,7 @@ public class GerenciadorDeCasamento {
                                     break;
                                 case 8:
                                     System.out.println("\n\n Voce escolheu: 7 - CADASTRAR PAGAMENTOS \n");
-                                    //Pagamento pagamentoTemporarioLogado = this.criarPagamento();
+                                    this.criarPagamentoQualquer();
                                     break;
                                 case 9:
                                     System.out.println("\n\n Voce escolheu: 8 - GERAR RELATORIOS E CONVITES\n");
@@ -123,8 +139,8 @@ public class GerenciadorDeCasamento {
                     } else {
                         //LOGADO COMO OUTRO
                         if (logado != null && "CO".equals(logado.getTipo())) {
-                            System.out.println("\nVocê logou como CONVIDADO" +
-                                               "\nVocê pode confirmar a presença" +
+                            System.out.println("\nVoce logou como CONVIDADO" +
+                                               "\nVoce pode confirmar a presenca" +
                                                "\nPara isso, informe seu ACESSO: ");
 
                             String acessoTemporario = scanner.nextLine();
@@ -137,18 +153,18 @@ public class GerenciadorDeCasamento {
                                 int opcaoLogadoOutro = this.menuLogadoOutro();
         
                                 switch (opcaoLogadoOutro) {
-                                    case 1: // Confirmar presença
-                                        System.out.println("\n\nVocê CONFIRMOU presença da sua família!");
+                                    case 1: 
+                                        System.out.println("\n\nVocê CONFIRMOU presenca da sua familia!");
                                         atualizarPresencaConvidados(familia, true);
                                         break;
 
-                                    case 2: // Não ir ao evento
-                                        System.out.println("\n\nSua família NÃO vai ao evento!");
+                                    case 2: 
+                                        System.out.println("\n\nSua familia NAO vai ao evento!");
                                         atualizarPresencaConvidados(familia, false);
                                         break;
 
                                     default:
-                                    System.out.println("\n\nCaractere Inválido! Tente Novamente!");
+                                    System.out.println("\n\nCaractere Invalido! Tente Novamente!");
                                 }
                             } 
                             else {
@@ -201,6 +217,7 @@ public class GerenciadorDeCasamento {
     }
     
     public int menuInicial() {
+        this.calendario.verificarPagamento(this.dataVerificar);
         StringBuilder builder = new StringBuilder("");
 
         builder.append("\n\nSEJA BEM VINDO AO GERENCIADOR DE CASAMENTO\n\n");
@@ -450,12 +467,16 @@ public class GerenciadorDeCasamento {
             telefone = scanner.nextLine();
         }
         f.setTelefone(telefone);
+        
+        
+        /*
         //VALOR A PAGAR
         System.out.println("\n Qual o valor a pagar: ");
         f.setValorAPagar(scanner.nextInt());
         //PARCELAS
         System.out.println("\n Esse valor vai ser pago em quantas parcelas: ");
         f.setParcelas(scanner.nextInt());
+        */
         //ESTADO
         System.out.println("\n Qual o estado do pagamento? (pago ou em pagamento):");
         String estado = scanner.nextLine().toLowerCase();
@@ -464,7 +485,6 @@ public class GerenciadorDeCasamento {
             estado = scanner.nextLine().toLowerCase();
         }
         f.setEstado(estado);
-        
         // ADICIONANDO O FORNECEDOR
         if (fornecedorDAO.adiciona(f)) {
             System.out.println("\nFornecedor Adicionado! \n\n");
@@ -474,6 +494,9 @@ public class GerenciadorDeCasamento {
             System.out.println("\nNAO foi possivel adicionar o forncedor! \n\n");
             return null;
         }
+        //f.setPagamentoDAO(criarPagamentoFornecedor()); 
+        //return f;
+
     }
     
     private void criarEvento(){
@@ -493,7 +516,7 @@ public class GerenciadorDeCasamento {
         this.evento.setNoiva(usuarioDAO.usuarios[1].getPessoa());
         System.out.println(this.evento);
     }
-    
+
     private Presente criarPresente() {
         
         Presente p = new Presente();
@@ -557,6 +580,98 @@ public class GerenciadorDeCasamento {
         recadoDAO.mostrar();
     }
     
+    private void criarPagamentoQualquer(){
+        System.out.println("O que sera pago?");
+        String descricao = scanner.nextLine();
+        //perguntar primeiro o valor da parcela para já inserir todas de uma vez no calendário
+        System.out.println("Sao quantas parcelas?");
+        int parcelaTotal = scanner.nextInt();
+        
+        System.out.println("Qual o valor de cada parcela? Se for unica, qual o valor da parcela unica?");
+        double valorParcela = scanner.nextDouble();
+        
+        LocalDate dataParcela = null;
+        while (dataParcela == null) {
+            System.out.println("Qual a data do pagamento da primeira parcela? (dd/mm/yyyy)");
+            String dataNaoFormatada = scanner.nextLine();
+            try {
+                dataParcela = LocalDate.parse(dataNaoFormatada, formato);
+            } catch (DateTimeParseException e) {
+                System.out.println("Data invalida! Tente novamente no formato (dd/mm/yyyy):");
+            }
+        }
+
+
+        Pessoa pessoa = null;
+        do{
+            System.out.println("Qual o id da pessoa a pagar?");
+            long idPessoa = scanner.nextLong();
+            scanner.nextLine();
+            pessoa = pessoaDAO.buscaPorId(idPessoa);
+            if(pessoa != null){
+                System.out.println("Pessoa encontrada!");
+            }
+            else{
+                System.out.println("Id invalido, tente novamente...");
+            }
+        }while(pessoa == null);
+        int parcelaAtual = 1;
+        do{
+            Pagamento pagamentoTemporario = new Pagamento(pessoa, descricao, valorParcela, parcelaTotal, parcelaAtual, dataParcela.plusMonths(parcelaAtual - 1));
+            inserirNoCalendario(pagamentoTemporario);
+            parcelaAtual++;
+        }while(parcelaAtual < parcelaTotal);
+    }
+    
+    private PagamentoDAO criarPagamentoFornecedor(){
+        PagamentoDAO pagamentos = new PagamentoDAO();
+        System.out.println("O que sera pago?");
+        String descricao = scanner.nextLine();
+        //perguntar primeiro o valor da parcela para já inserir todas de uma vez no calendário
+        System.out.println("Sao quantas parcelas?");
+        int parcelaTotal = scanner.nextInt();
+        
+        System.out.println("Qual o valor de cada parcela? Se for unica, qual o valor da parcela unica?");
+        double valorParcela = scanner.nextDouble();
+        
+        LocalDate dataParcela = null;
+        while (dataParcela == null) {
+            System.out.println("Qual a data do pagamento da primeira parcela? (dd/mm/yyyy)");
+            String dataNaoFormatada = scanner.nextLine();
+            try {
+                dataParcela = LocalDate.parse(dataNaoFormatada, formato);
+            } catch (DateTimeParseException e) {
+                System.out.println("Data invalida! Tente novamente no formato (dd/mm/yyyy):");
+            }
+        }
+
+
+        Pessoa pessoa = null;
+        do{
+            System.out.println("Qual o id da pessoa a pagar?");
+            long idPessoa = scanner.nextLong();
+            scanner.nextLine();
+            pessoa = pessoaDAO.buscaPorId(idPessoa);
+            if(pessoa != null){
+                System.out.println("Pessoa encontrada!");
+            }
+            else{
+                System.out.println("Id invalido, tente novamente...");
+            }
+        }while(pessoa == null);
+        int parcelaAtual = 1;
+        do{
+            Pagamento pagamentoTemporario = new Pagamento(pessoa, descricao, valorParcela, parcelaTotal, parcelaAtual, dataParcela.plusMonths(parcelaAtual - 1));
+            inserirNoCalendario(pagamentoTemporario);
+            pagamentos.adicionar(pagamentoTemporario);
+            parcelaAtual++;
+        }while(parcelaAtual <= parcelaTotal);
+        return pagamentos;
+    }
+        
+    private void inserirNoCalendario(Pagamento pagamento){
+        this.calendario.adiciona(pagamento);
+    }
     private boolean validarCnpj(String cnpj) {
         return cnpj != null && cnpj.matches("\\d{14}");
     }

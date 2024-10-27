@@ -16,8 +16,7 @@ public class Fornecedor {
     private String nome;
     private String cnpj;
     private String telefone;
-    private double valorAPagar;
-    private int parcelas;
+    private PagamentoDAO pagamento;
     private String estado;
     private LocalDate dataCriacao;
     private LocalDate dataModificacao;
@@ -26,6 +25,12 @@ public class Fornecedor {
         id = Fornecedor.serial++;
         this.dataCriacao = LocalDate.now();
         this.dataModificacao = this.dataCriacao;
+    }
+    
+    public void verificarPagamento(){
+        if(this.pagamento.verificarPagamentoCompleto() == true){
+            this.estado = "Pago";
+        }
     }
     
     public long getId() {
@@ -59,28 +64,17 @@ public class Fornecedor {
         this.dataModificacao = LocalDate.now();
     }
 
-    public double getValorAPagar() {
-        return valorAPagar;
-    }
-
-    public void setValorAPagar(double valorAPagar) {
-        this.valorAPagar = valorAPagar;
-        this.dataModificacao = LocalDate.now();
-    }
-
-    public int getParcelas() {
-        return parcelas;
-    }
-
-    public void setParcelas(int parcelar) {
-        this.parcelas = parcelar;
-        this.dataModificacao = LocalDate.now();
-    }
 
     public String getEstado() {
         return estado;
     }
 
+    public void setPagamentoDAO(PagamentoDAO pagamentos) {
+        this.pagamento = pagamentos;
+    }
+
+    
+    
     public void setEstado(String estado) {
         this.estado = estado;
         this.dataModificacao = LocalDate.now();
@@ -96,7 +90,7 @@ public class Fornecedor {
 
     @Override
     public String toString() {
-        return "Esse eh o fornecedor: " + "id=" + id + ", nome=" + nome + ", cnpj=" + cnpj + ", telefone=" + telefone + ", valorAPagar=" + valorAPagar + ", parcelar=" + parcelas + ", estado=" + estado + ", dataCriacao=" + dataCriacao + ", dataModificacao=" + dataModificacao;
+        return "Esse eh o fornecedor: " + "id=" + id + ", nome=" + nome + ", cnpj=" + cnpj + ", telefone=" + telefone + ", estado=" + estado + ", dataCriacao=" + dataCriacao + ", dataModificacao=" + dataModificacao;
     }
 
     @Override
