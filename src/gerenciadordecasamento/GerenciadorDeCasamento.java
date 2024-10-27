@@ -40,14 +40,14 @@ public class GerenciadorDeCasamento {
         Usuario usuarioNoivo = new Usuario(noivo, loginNoivo, senhaNoivo);
         usuarioDAO.adiciona(usuarioNoivo);
         
-        System.out.println("\n\nCRIACAO DA NOIVA...");
+       /* System.out.println("\n\nCRIACAO DA NOIVA...");
         Pessoa noiva = this.criarPessoa();
         System.out.println("\n Qual o login do Noiva:");
         String loginNoiva = scanner.nextLine();
         System.out.println("\n Qual a senha do Noiva:");
         String senhaNoiva = scanner.nextLine();
         Usuario usuarioNoiva = new Usuario(noiva, loginNoiva, senhaNoiva);
-        usuarioDAO.adiciona(usuarioNoiva);
+        usuarioDAO.adiciona(usuarioNoiva);*/
         
         //AMBIENTE DE TESTES
         /*Fornecedor fornecedorTemporarioLogado = this.criarFornecedor();
@@ -65,7 +65,7 @@ public class GerenciadorDeCasamento {
         int opcaoUsuario = 7;
         
         do {
-            this.calendario.verificarPagamento(this.dataVerificar);
+            
             opcaoUsuario = this.menuInicial();
             
             switch (opcaoUsuario) {
@@ -102,7 +102,7 @@ public class GerenciadorDeCasamento {
                                     ConvidadoIndividual conviteTemporarioLogado = this.criarConviteIndividual();
                                     break;
                                 case 6:
-                                    System.out.println("\n\n Voce escolheu: 5 - CADASTRAR CONVITES INDIVIDUAL\n");
+                                    System.out.println("\n\n Voce escolheu: 6 - CADASTRAR CONVITES FAMILIA\n");
                                     ConvidadoFamilia conviteFamiliaTemporarioLogado = this.criarConviteFamilia();
                                     break;
                                 case 7:
@@ -129,6 +129,8 @@ public class GerenciadorDeCasamento {
                                     }while(opcMenuRelatorios != 7);
                                     
                                     break;
+                                
+                                    
                                 
                                 default:
                                     System.out.println("\n\n Opcao Invalida! Tente Novamente!");
@@ -170,9 +172,9 @@ public class GerenciadorDeCasamento {
                             else {
                                 System.out.println("\nNAO foi encontrado esse ACESSO! Tente Novamente");
                             }
-                        }
-                        break;
+                        }        
                 }
+                break;
                 case 2:
                     System.out.println("\n\n Voce escolheu: 2 - ENTAR SEM LOGAR \n");
                     int opcaoEntrarSemLogar = 1;
@@ -217,7 +219,10 @@ public class GerenciadorDeCasamento {
     }
     
     public int menuInicial() {
+        System.out.println(this.calendario.toString());
         this.calendario.verificarPagamento(this.dataVerificar);
+        this.fornecedorDAO.verificarVetorPagamentos();
+        this.dataVerificar = this.dataVerificar.plusMonths(1);
         StringBuilder builder = new StringBuilder("");
 
         builder.append("\n\nSEJA BEM VINDO AO GERENCIADOR DE CASAMENTO\n\n");
@@ -265,12 +270,12 @@ public class GerenciadorDeCasamento {
        {
             System.out.println("Qual o telefone (xx-xxxxx-xxxx)");
             telefone = scanner.nextLine();
-            if (!telefone.matches("\\d{2}-\\d{5}-\\d{4}")) {
-                System.out.println("Telefone invalido! Use o formato (xx-xxxxx-xxxx):");
-            } else {
+            //if (!telefone.matches("\\d{2}-\\d{5}-\\d{4}")) {
+            //    System.out.println("Telefone invalido! Use o formato (xx-xxxxx-xxxx):");
+            //} else {
                 p.setTelefone(telefone);
                 flag = 1;
-            }
+            //}
        }
 
         //ADICIONANDO A PESSOA
@@ -485,6 +490,7 @@ public class GerenciadorDeCasamento {
             estado = scanner.nextLine().toLowerCase();
         }
         f.setEstado(estado);
+        f.setPagamentoDAO(criarPagamentoFornecedor()); 
         // ADICIONANDO O FORNECEDOR
         if (fornecedorDAO.adiciona(f)) {
             System.out.println("\nFornecedor Adicionado! \n\n");
@@ -494,9 +500,7 @@ public class GerenciadorDeCasamento {
             System.out.println("\nNAO foi possivel adicionar o forncedor! \n\n");
             return null;
         }
-        //f.setPagamentoDAO(criarPagamentoFornecedor()); 
-        //return f;
-
+        
     }
     
     private void criarEvento(){
@@ -790,7 +794,9 @@ public class GerenciadorDeCasamento {
 
         if (convidadosFamilia != null) {
             for (ConvidadoIndividual ci : convidadosFamilia) {
-                ci.setConfirmacao(confirmacao);
+                if(ci != null){
+                    ci.setConfirmacao(confirmacao);
+                } 
             }
         }
     }

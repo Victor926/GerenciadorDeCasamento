@@ -55,8 +55,10 @@ public class ConvidadoFamiliaDAO {
     
     public boolean buscaPorNome(String nome) {
         for (ConvidadoFamilia f : familias) {
-            if (f != null && f.getNome().equalsIgnoreCase(nome)) {
-                return true;
+            if (f != null && f.getNome() != null){
+                if(f.getNome().equalsIgnoreCase(nome)){
+                   return true; 
+                }        
             }
         }
         return false;
@@ -64,8 +66,10 @@ public class ConvidadoFamiliaDAO {
     
     public boolean buscarAcesso(String acesso) {
         for (ConvidadoFamilia cf : familias) {
-            if (cf != null && cf.getAcesso().equals(acesso)) {
-                return true;
+            if (cf.getAcesso() != null) {
+                if(cf.getAcesso().equals(acesso)){
+                    return true;
+                }
             }
         }
         return false;
@@ -73,8 +77,10 @@ public class ConvidadoFamiliaDAO {
     
     public ConvidadoFamilia buscarFamilia(String acesso) {
         for (ConvidadoFamilia cf : familias) {
-            if (cf != null && cf.getAcesso().equals(acesso)) {
-                return cf;
+            if (cf.getAcesso() != null && cf.getAcesso()!= null) {
+                if(cf.getAcesso().equals(acesso)){
+                    return cf;
+                }
             }
         }
         return null;
@@ -82,8 +88,10 @@ public class ConvidadoFamiliaDAO {
     
     public ConvidadoFamilia buscarFamiliaPorNome(String familia) {
         for (ConvidadoFamilia cf : familias) {
-            if (cf != null && cf.getNome().equals(familia)) {
-                return cf;
+            if (cf != null && cf.getNome() != null) {
+                if(cf.getNome().equals(familia)){
+                   return cf; 
+                }     
             }
         }
         return null;

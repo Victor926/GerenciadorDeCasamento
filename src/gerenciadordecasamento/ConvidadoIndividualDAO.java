@@ -67,13 +67,15 @@ public class ConvidadoIndividualDAO {
         int count = 0;
         
         for (ConvidadoIndividual ci : convidadosIndividuais) {
-            if (ci != null && ci.getFamilia().equals(familia)) {
-                if (count < convidadosDaFamilia.length) {
+            if (ci != null && ci.getFamilia() != null ) {
+                if(ci.getFamilia().equals(familia)){
+                  if (count < convidadosDaFamilia.length) {
                     convidadosDaFamilia[count] = ci;
                     count++;
-                } else {
-                    System.out.println("Nao ha mais espaco para pessoa dessa familia.");
-                    break;
+                  } else {
+                      System.out.println("Nao ha mais espaco para pessoa dessa familia.");
+                      break;
+                  }   
                 }
             }
         }

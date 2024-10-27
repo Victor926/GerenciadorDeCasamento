@@ -51,7 +51,7 @@ public class ConvidadoFamilia {
     }
 
     public String getAcesso() {
-        return acesso;
+        return this.acesso;
     }
 
     public void setAcesso(String acesso) {
