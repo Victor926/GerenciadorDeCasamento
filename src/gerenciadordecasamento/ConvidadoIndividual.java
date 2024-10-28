@@ -99,7 +99,7 @@ public class ConvidadoIndividual {
 
     @Override
     public String toString() {
-        return "ConvidadoIndividual{" + "id=" + id + ", pessoa=" + pessoa + ", familia=" + familia + ", parentesco=" + parentesco + ", confirmacao=" + confirmacao + ", dataCriacao=" + dataCriacao + ", dataModificacao=" + dataModificacao + '}';
+        return "\nNome: " + pessoa.getNome() + "\nFamilia: " + familia.getNome() + "\nParentesco: " + parentesco;
     }
 
 }

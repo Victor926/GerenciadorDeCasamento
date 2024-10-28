@@ -15,8 +15,8 @@ public class Calendario {
         return pagamentos;
     }
     
-    public void verificarPagamento(LocalDate dataVerificada){
-       
+    public void verificarPagamento(){
+       this.dataHoje = LocalDate.now();
         int i = 0;
         while(i<this.pagamentos.length){
             if(this.pagamentos[i] == null)
@@ -24,9 +24,9 @@ public class Calendario {
                 i++;
             }
             else{
-                if(this.pagamentos[i].getDataParcela().isEqual(dataVerificada)){
+                if(this.pagamentos[i].getDataParcela().isEqual(this.dataHoje)){
                     this.pagamentos[i].setPago(true);
-                    System.out.println(" O pagamento " + this.pagamentos[i].getDescricao() + " foi pago hoje dia " + dataVerificada.toString());
+                    System.out.println(" O pagamento " + this.pagamentos[i].getDescricao() + " foi pago hoje dia " + this.dataHoje.toString());
                 }               
                 i++;
             }

@@ -29,7 +29,6 @@ public class GerenciadorDeCasamento {
     int contNoivo = 0;
     DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private Calendario calendario = new Calendario();
-    private LocalDate dataVerificar = LocalDate.now();
     public GerenciadorDeCasamento() {
         
         System.out.println("\n CRIACAO DO NOIVO...");
@@ -84,16 +83,16 @@ public class GerenciadorDeCasamento {
                             switch (opcaoLogadoNoivo) {
                                 case 1:
                                     System.out.println("\n\n Voce escolheu: 1 - CADASTRAR PESSOA \n");
-                                    Pessoa pessoaTemporariaLogado = this.criarPessoa();
+                                    this.criarPessoa();
                                     break;
                                 case 2:
                                     System.out.println("\n\n Voce escolheu: 2 - CADASTRAR USUARIO \n");
-                                    Usuario usuarioTemporarioLogado = this.criarUsuario();
+                                    this.criarUsuario();
                                     break;
                                 case 3:
                                     System.out.println("\n\n Voce escolheu: 3 - CADASTRAR FORNECEDOR \n");
-                                    Fornecedor fornecedorTemporarioLogado = this.criarFornecedor();
-                                    fornecedorDAO.adiciona(fornecedorTemporarioLogado);
+                                    this.criarFornecedor();
+                                    
                                     break;
                                 case 4:
                                     System.out.println("\n\n Voce escolheu: 4 - CADASTRAR EVENTO \n");
@@ -101,15 +100,15 @@ public class GerenciadorDeCasamento {
                                     break;
                                 case 5:
                                     System.out.println("\n\n Voce escolheu: 5 - CADASTRAR CONVITES INDIVIDUAL\n");
-                                    ConvidadoIndividual conviteTemporarioLogado = this.criarConviteIndividual();
+                                    this.criarConviteIndividual();
                                     break;
                                 case 6:
                                     System.out.println("\n\n Voce escolheu: 6 - CADASTRAR CONVITES FAMILIA\n");
-                                    ConvidadoFamilia conviteFamiliaTemporarioLogado = this.criarConviteFamilia();
+                                    this.criarConviteFamilia();
                                     break;
                                 case 7:
                                     System.out.println("\n\n Voce escolheu: 6 - CADASTRAR PRESENTES \n");
-                                    Presente presenteTemporarioLogado = this.criarPresente();
+                                    this.criarPresente();
                                     break;
                                 case 8:
                                     System.out.println("\n\n Voce escolheu: 7 - CADASTRAR PAGAMENTOS \n");
@@ -123,7 +122,7 @@ public class GerenciadorDeCasamento {
                                         opcMenuRelatorios = this.menuRelatorios();
                                         switch(opcMenuRelatorios) {
                                             case 1:
-                                                recadoDAO.listarRecados();
+                                                recadoDAO.mostrar();
                                                 break;
                                             case 2:
                                                 //GERAR CONVITE INDIVIDUAL
@@ -145,7 +144,10 @@ public class GerenciadorDeCasamento {
                                                 this.gerarRelatorioConvidadosConfirmados();
                                                 break;
                                             default:
-                                                System.out.println("\n\n Opcao Invalida! Tente Novamente!");
+                                                if(opcMenuRelatorios!=7){
+                                                    System.out.println("\n\n Opcao Invalida! Tente Novamente!");
+                                                }
+                                                
                                                 break;
                                         }
                                     }while(opcMenuRelatorios != 7);
@@ -155,7 +157,9 @@ public class GerenciadorDeCasamento {
                                     
                                 
                                 default:
-                                    System.out.println("\n\n Opcao Invalida! Tente Novamente!");
+                                    if(opcaoLogadoNoivo!=10){
+                                        System.out.println("\n\n Opcao Invalida! Tente Novamente!");
+                                    }  
                                     break;
                             }
                         }while (opcaoLogadoNoivo != 10);
@@ -179,7 +183,7 @@ public class GerenciadorDeCasamento {
                                 switch (opcaoLogadoOutro) {
                                     case 1: 
                                         System.out.println("\n\nVocê CONFIRMOU presenca da sua familia!");
-                                        convidadoIndividualDAO.confirmarPresenca(familia, "corfimado");
+                                        convidadoIndividualDAO.confirmarPresenca(familia, "confirmado");
                                         break;
 
                                     case 2: 
@@ -211,27 +215,21 @@ public class GerenciadorDeCasamento {
                             break;
                         case 2:
                             System.out.println("\n\n Voce escolheu: 2 - CADASTRAR RECADO \n");
-                            Recado recadoTemporarioSemLogar = this.criarRecado();
+                            this.criarRecado();
                             break;
                         default:
-                            System.out.println("\n\n Caracter Invalido! Tente Novamente!");
+                            if(opcaoEntrarSemLogar!=3){
+                                System.out.println("\n\n Caracter Invalido! Tente Novamente!");
+                            }
                         }
 
                     } while (opcaoEntrarSemLogar != 3);
                     break;
-                case 3:
-                    System.out.println("\n\n Voce escolheu: 3 - CADASTRAR PESSOA \n");
-                    Pessoa temporaria = this.criarPessoa();
-                    break;   
-                case 4:
-                    System.out.println("\n\n Voce escolheu: 4 - CADASTRAR USUARIO \n");
-                    Usuario temporario = this.criarUsuario();
-                    break; 
                 default:
                     System.out.println("\n\n Opcao Invalida! Tente Novamente!");
                     break;
             }
-        }while (opcaoUsuario != 5);
+        }while (opcaoUsuario != 3);
     }
     
     public static void main(String[] args) {
@@ -242,17 +240,14 @@ public class GerenciadorDeCasamento {
     
     public int menuInicial() {
         System.out.println(this.calendario.toString());
-        this.calendario.verificarPagamento(this.dataVerificar);
+        this.calendario.verificarPagamento();
         this.fornecedorDAO.verificarVetorPagamentos();
-        this.dataVerificar = this.dataVerificar.plusMonths(1);
         StringBuilder builder = new StringBuilder("");
 
         builder.append("\n\nSEJA BEM VINDO AO GERENCIADOR DE CASAMENTO\n\n");
         builder.append("\n1 - LOGAR..................................");
         builder.append("\n2 - ENTRAR SEM LOGAR.......................");
-        builder.append("\n3 - CADASTRAR PESSOA.......................");
-        builder.append("\n4 - CADASTRAR USUARIO......................");
-        builder.append("\n5 - SAIR...................................");
+        builder.append("\n3 - SAIR...................................");
         builder.append("\n\n SUA OPCAO: ");
 
         System.out.print(builder.toString());
@@ -292,12 +287,12 @@ public class GerenciadorDeCasamento {
        {
             System.out.println("Qual o telefone (xx-xxxxx-xxxx)");
             telefone = scanner.nextLine();
-            //if (!telefone.matches("\\d{2}-\\d{5}-\\d{4}")) {
-            //    System.out.println("Telefone invalido! Use o formato (xx-xxxxx-xxxx):");
-            //} else {
+            if (!telefone.matches("\\d{2}-\\d{5}-\\d{4}")) {
+                System.out.println("Telefone invalido! Use o formato (xx-xxxxx-xxxx):");
+            } else {
                 p.setTelefone(telefone);
                 flag = 1;
-            //}
+            }
        }
 
         //ADICIONANDO A PESSOA
@@ -331,9 +326,9 @@ public class GerenciadorDeCasamento {
             //TIPO
             String tipo;
             do {
-                System.out.print("Informe o tipo de usuario [N - noivo(a), CE - cerimonialista, CO - Convidado]: ");
+                System.out.print("Informe o tipo de usuario [CE - cerimonialista, CO - Convidado]: ");
                 tipo = scanner.nextLine().toUpperCase();
-            } while (!tipo.equals("N") && !tipo.equals("CE") && !tipo.equals("CO"));
+            } while (!tipo.equals("CE") && !tipo.equals("CO"));
             u.setTipo(tipo);
             // LOGIN
             boolean loginDisponivel;
@@ -584,7 +579,7 @@ public class GerenciadorDeCasamento {
             //TEXTO
             System.out.println("\n Digite o recado: ");
             r.setComentario(scanner.nextLine());
-
+            r.setPessoa(pessoaTemporaria);
             // ADICIONANDO O RECADO
             if (recadoDAO.adiciona(r)) {
                 System.out.println("\nRecado Adicionado! \n\n");
@@ -780,9 +775,7 @@ public class GerenciadorDeCasamento {
         ConvidadoFamilia familia = convidadoFamiliaDAO.buscarFamiliaPorNome(nomeFamilia);
         if (familia == null) {
             //ADICIONADO A FAMILIA
-            ConvidadoFamilia familiaTemporaria = new ConvidadoFamilia();
-            familiaTemporaria.setNome(nomeFamilia);
-            convidadoFamiliaDAO.adiciona(familiaTemporaria);
+            cf.setNome(nomeFamilia);
             //CRIANDO ACESSO
             String diaMesAno = String.format("%02d%02d%04d", LocalDate.now().getDayOfMonth(), LocalDate.now().getMonthValue(), LocalDate.now().getYear());
             String primeiroNomeNoivo = pessoaDAO.pessoas[0].getNome().split(" ")[0];

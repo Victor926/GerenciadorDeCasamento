@@ -69,6 +69,6 @@ public class Recado {
 
     @Override
     public String toString() {
-        return "Recado{" + "id=" + id + ", pessoa=" + pessoa + ", comentario=" + comentario + ", dataCriacao=" + dataCriacao + ", dataModificacao=" + dataModificacao + '}';
+        return "\nRecado de: " + pessoa.getNome() + "\n"+ "Reacado: " + this.comentario;
     }
 }

@@ -77,11 +77,14 @@ public class ConvidadoFamiliaDAO {
     
     public ConvidadoFamilia buscarFamilia(String acesso) {
         for (ConvidadoFamilia cf : familias) {
-            if (cf.getAcesso() != null && cf.getAcesso()!= null) {
-                if(cf.getAcesso().equals(acesso)){
-                    return cf;
+            if(cf != null){
+                if (cf.getAcesso() != null) {
+                    if(cf.getAcesso().equals(acesso)){
+                        return cf;
+                    }
                 }
             }
+            
         }
         return null;
     }

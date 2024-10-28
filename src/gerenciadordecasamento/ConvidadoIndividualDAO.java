@@ -53,11 +53,10 @@ public class ConvidadoIndividualDAO {
         totalPontos = 0;
         
         System.out.println("-------- LISTA DE CONVIDADOS CONFIRMADOS --------:");
-        
+        System.out.println("\n NOME \t\t IDADE \t\t PONTOS\n");
         for (ConvidadoIndividual ci : convidadosIndividuais) {
             if (ci != null) {
                 if (ci.isConfirmacao().equals("confirmado")) {
-                    System.out.println(ci);
                     temFamilia = true;
                     Pessoa pessoa = ci.getPessoa();
                     int idade = calcularIdade(pessoa.getDataNascimento());

@@ -22,6 +22,12 @@ public class Evento {
     private LocalDate dataCriacao;
     private LocalDate dataModificacao;
 
+    public Evento(){
+        id = Evento.serial++;
+        this.dataCriacao = LocalDate.now();
+        this.dataModificacao = this.dataCriacao;
+    }
+    
     @Override
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
