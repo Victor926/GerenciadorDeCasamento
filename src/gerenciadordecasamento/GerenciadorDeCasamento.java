@@ -148,7 +148,7 @@ public class GerenciadorDeCasamento {
                                                 System.out.println("\n\n Opcao Invalida! Tente Novamente!");
                                                 break;
                                         }
-                                    }while(opcMenuRelatorios != 6);
+                                    }while(opcMenuRelatorios != 7);
                                     
                                     break;
                                 
@@ -179,12 +179,12 @@ public class GerenciadorDeCasamento {
                                 switch (opcaoLogadoOutro) {
                                     case 1: 
                                         System.out.println("\n\nVocê CONFIRMOU presenca da sua familia!");
-                                        atualizarPresencaConvidados(familia, true);
+                                        convidadoIndividualDAO.confirmarPresenca(familia, "corfimado");
                                         break;
 
                                     case 2: 
                                         System.out.println("\n\nSua familia NAO vai ao evento!");
-                                        atualizarPresencaConvidados(familia, false);
+                                        convidadoIndividualDAO.confirmarPresenca(familia, "nao confirmado");
                                         break;
 
                                     default:
@@ -457,7 +457,8 @@ public class GerenciadorDeCasamento {
         builder.append("\n 3 - GERAR CONVITE PARA FAMILIA..........");
         builder.append("\n 4 - PAGAMENTOS REALIZADOS PELOS NOIVOS..");
         builder.append("\n 5 - LISTA DE CONVIDADOS.................");
-        builder.append("\n 6 - SAIR................................");
+        builder.append("\n 6 - LISTA DE CONVIDADOS CONFIRMADOS.....");
+        builder.append("\n 7 - SAIR................................");
         builder.append("\n\n SUA OPCAO: ");
         System.out.print(builder.toString());
         
@@ -735,6 +736,8 @@ public class GerenciadorDeCasamento {
             System.out.println("\nFAMILIA nao encontrada! Tente Novamente!");
             return null;
         }
+        
+        ci.setFamilia(familia);
    
         System.out.print("\nQual o PARENTESCO? ");
         ci.setParentesco(scanner.nextLine());
@@ -815,17 +818,7 @@ public class GerenciadorDeCasamento {
         return letras.toString();
     }
     
-    private void atualizarPresencaConvidados(ConvidadoFamilia familia, boolean confirmacao) {
-        ConvidadoIndividual[] convidadosFamilia = convidadoIndividualDAO.buscarConvidadosPorFamilia(familia);
-
-        if (convidadosFamilia != null) {
-            for (ConvidadoIndividual ci : convidadosFamilia) {
-                if(ci != null){
-                    ci.setConfirmacao(confirmacao);
-                } 
-            }
-        }
-    }
+    
     
     public void imprimirConviteIndividual() {
         System.out.print("Para qual PESSOA deseja imprimir um Convite: ");
@@ -869,52 +862,21 @@ public class GerenciadorDeCasamento {
             System.out.println("\n\nO codigo de acesso de voces eh: " + acesso);
             System.out.println("------------------------------------------------------------------\n");
         } else {
-            System.out.println("A família não está na lista de convidados por família.");
+            System.out.println("A familia não está na lista de convidados.");
         }
     }
 
-    
-    private int calcularIdade(LocalDate dataNascimento) {
-        return Period.between(dataNascimento, LocalDate.now()).getYears();
-    }
-    
     public void gerarRelatorioConvidadosConfirmados() {
-        ConvidadoIndividual[] convidadosConfirmados = new ConvidadoIndividual[100];
-        convidadosConfirmados = convidadoIndividualDAO.obterConvidadosConfirmados();
-        double totalPontos = 0;
-
-        System.out.println("-------- LISTA DE CONVIDADOS CONFIRMADOS --------:");
-        System.out.println("NOME\t\tIDADE\t\tPONTOS");
         
-        //LISTAR PESSOAS
-        for (ConvidadoIndividual ci : convidadosConfirmados) {
-            if (ci != null) {
-                Pessoa pessoa = ci.getPessoa();
-                int idade = calcularIdade(pessoa.getDataNascimento());
-
-                double pontos;
-                if (idade <= 8) {
-                    //CRIANCAS QUE NAO CONTAM
-                    pontos = 0;
-                } else if (idade >= 9 && idade <= 13) {
-                    //CRIANCAS QUE CONTAM
-                    pontos = 0.5;
-                } else {
-                    //ADULTOS
-                    pontos = 1.0;
-                }
-
-                System.out.printf("%s\t\t%d\t\t%.1f%n", pessoa.getNome(), idade, pontos);
-                totalPontos += pontos;
-            }
-        }
+        double totalPontos = 0;
+        totalPontos = convidadoIndividualDAO.mostrarConfirmados(totalPontos);
 
         //LISTAR FORNECEDORES
         Fornecedor[] fornecedores = fornecedorDAO.fornecedores;
         for (Fornecedor f : fornecedores) {
             if (f != null) {
                 double pontosFornecedor = 0.5;
-                System.out.printf("%s\t\tFORNECEDOR\t%.1f%n", f.getNome(), pontosFornecedor);
+                System.out.println("FORNECEDOR: " + f.getNome() + " | Pontos: " + pontosFornecedor);
                 totalPontos += pontosFornecedor;
             }
         }

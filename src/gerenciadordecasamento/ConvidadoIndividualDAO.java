@@ -4,10 +4,9 @@
  */
 package gerenciadordecasamento;
 
-/**
- *
- * @author victo
- */
+import java.time.LocalDate;
+import java.time.Period;
+
 public class ConvidadoIndividualDAO {
     
     ConvidadoIndividual[] convidadosIndividuais = new ConvidadoIndividual[100];
@@ -32,16 +31,64 @@ public class ConvidadoIndividualDAO {
     }
     
     public void mostrar() {
+        StringBuilder sb = new StringBuilder();
         boolean temFamilia = false;
+        
         for (ConvidadoIndividual ci : convidadosIndividuais) {
             if (ci != null) {
-                System.out.println(ci);
+                sb.append(ci).append("\n");
                 temFamilia = true;
             }
         }
-        if (temFamilia == false) {
-            System.out.println("Nao ha CONCIDADOS INDIVIDUAIS cadastrados");
+        
+        if (!temFamilia) {
+            sb.append("Nao ha CONVIDADOS INDIVIDUAIS cadastrados");
         }
+        
+        System.out.println(sb.toString());
+    }
+    
+    public double mostrarConfirmados(double totalPontos) {
+        boolean temFamilia = false;
+        totalPontos = 0;
+        
+        System.out.println("-------- LISTA DE CONVIDADOS CONFIRMADOS --------:");
+        
+        for (ConvidadoIndividual ci : convidadosIndividuais) {
+            if (ci != null) {
+                if (ci.isConfirmacao().equals("confirmado")) {
+                    System.out.println(ci);
+                    temFamilia = true;
+                    Pessoa pessoa = ci.getPessoa();
+                    int idade = calcularIdade(pessoa.getDataNascimento());
+
+                    double pontos;
+                    if (idade <= 8) {
+                        // CRIANCAS QUE NAO CONTAM
+                        pontos = 0;
+                    } else if (idade >= 9 && idade <= 13) {
+                        // CRIANCAS QUE CONTAM
+                        pontos = 0.5;
+                    } else {
+                        // ADULTOS
+                        pontos = 1.0;
+                    }
+
+                    System.out.printf("%s\t\t%d\t\t%.1f%n", pessoa.getNome(), idade, pontos);
+                    totalPontos += pontos;
+                }
+            }
+        }
+        
+        if (!temFamilia) {
+            System.out.println("Nao ha CONVIDADOS INDIVIDUAIS cadastrados");
+        }
+        
+        return totalPontos;
+    }
+    
+    private int calcularIdade(LocalDate dataNascimento) {
+        return Period.between(dataNascimento, LocalDate.now()).getYears();
     }
     
     public int proximaPosicaoLivre() {
@@ -71,33 +118,22 @@ public class ConvidadoIndividualDAO {
         return null;
     }
 
-    
-    public ConvidadoIndividual[] buscarConvidadosPorFamilia(ConvidadoFamilia familia) {
-        ConvidadoIndividual[] convidadosDaFamilia = new ConvidadoIndividual[100];
-        int count = 0;
-        
+    public void confirmarPresenca(ConvidadoFamilia familia, String confirmacao) {
         for (ConvidadoIndividual ci : convidadosIndividuais) {
-            if (ci != null && ci.getFamilia() != null ) {
-                if(ci.getFamilia().equals(familia)){
-                  if (count < convidadosDaFamilia.length) {
-                    convidadosDaFamilia[count] = ci;
-                    count++;
-                  } else {
-                      System.out.println("Nao ha mais espaco para pessoa dessa familia.");
-                      break;
-                  }   
+            if (ci != null) {
+                if (ci.getFamilia().equals(familia)) {
+                    ci.setConfirmacao(confirmacao);
                 }
             }
         }
-        return convidadosDaFamilia;
     }
-    
+
     public ConvidadoIndividual[] obterConvidadosConfirmados() {
         ConvidadoIndividual[] convidadosConfirmados = new ConvidadoIndividual[100];
         int count = 0;
 
         for (ConvidadoIndividual ci : convidadosIndividuais) {
-            if (ci != null && ci.isConfirmacao() == true) { 
+            if (ci != null && ci.isConfirmacao().equals("confirmado")) { 
                 if (count < convidadosConfirmados.length) {
                     convidadosConfirmados[count] = ci;
                     count++;
@@ -110,6 +146,4 @@ public class ConvidadoIndividualDAO {
 
         return convidadosConfirmados;
     }
-    
 }
-    
