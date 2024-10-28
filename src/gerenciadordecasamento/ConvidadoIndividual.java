@@ -12,7 +12,7 @@ public class ConvidadoIndividual {
     private Pessoa pessoa;
     private ConvidadoFamilia familia;
     private String parentesco;
-    private boolean confirmacao;
+    private String confirmacao;
     private LocalDate dataCriacao;
     private LocalDate dataModificacao;
     
@@ -43,7 +43,7 @@ public class ConvidadoIndividual {
         return parentesco;
     }
 
-    public boolean isConfirmacao() {
+    public String isConfirmacao() {
         return confirmacao;
     }
 
@@ -70,7 +70,7 @@ public class ConvidadoIndividual {
         this.dataModificacao = LocalDate.now();
     }
 
-    public void setConfirmacao(boolean confirmacao) {
+    public void setConfirmacao(String confirmacao) {
         this.confirmacao = confirmacao;
         this.dataModificacao = LocalDate.now();
     }
@@ -99,9 +99,7 @@ public class ConvidadoIndividual {
 
     @Override
     public String toString() {
-        return "\n Nome: " + pessoa.getNome() + " | Familia: " + familia.getNome();
+        return "ConvidadoIndividual{" + "id=" + id + ", pessoa=" + pessoa + ", familia=" + familia + ", parentesco=" + parentesco + ", confirmacao=" + confirmacao + ", dataCriacao=" + dataCriacao + ", dataModificacao=" + dataModificacao + '}';
     }
-    
-    
-    
+
 }

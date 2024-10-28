@@ -5,6 +5,7 @@
 package gerenciadordecasamento;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 /**
  *
@@ -62,7 +63,7 @@ public class ConvidadoFamilia {
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 41 * hash + (int) (this.id ^ (this.id >>> 32));
+        hash = 89 * hash + Objects.hashCode(this.nome);
         return hash;
     }
 
@@ -78,8 +79,10 @@ public class ConvidadoFamilia {
             return false;
         }
         final ConvidadoFamilia other = (ConvidadoFamilia) obj;
-        return this.id == other.id;
+        return Objects.equals(this.nome, other.nome);
     }
+
+    
 
     @Override
     public String toString() {
