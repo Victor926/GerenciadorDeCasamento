@@ -26,7 +26,6 @@ public class GerenciadorDeCasamento {
     ConvidadoFamiliaDAO convidadoFamiliaDAO = new ConvidadoFamiliaDAO();
     ConvidadoIndividualDAO convidadoIndividualDAO = new ConvidadoIndividualDAO();
     Evento evento = new Evento();
-    int contNoivo = 0;
     DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private Calendario calendario = new Calendario();
     public GerenciadorDeCasamento() {
@@ -55,11 +54,11 @@ public class GerenciadorDeCasamento {
         
         this.calendario.verificarPagamento(this.dataVerificar.plusMonths(0));
         this.calendario.verificarPagamento(this.dataVerificar.plusMonths(1));
-        this.calendario.verificarPagamento(this.dataVerificar.plusMonths(1));
         this.calendario.verificarPagamento(this.dataVerificar.plusMonths(2));
+        this.calendario.verificarPagamento(this.dataVerificar.plusMonths(3));
         System.out.println(this.calendario.toString());
         this.fornecedorDAO.verificarVetorPagamentos();
-        //System.out.println("O estado do pagamento eh: " + this.fornecedorDAO.fornecedores[0].getEstado());
+        System.out.println("O estado do pagamento eh: " + this.fornecedorDAO.fornecedores[0].getEstado());
         System.out.println(this.calendario.relatorioPagamentosNoivos(0, 1));
         System.out.println(this.calendario.toString());*/
         //fim do ambiente de testes
@@ -107,15 +106,15 @@ public class GerenciadorDeCasamento {
                                     this.criarConviteFamilia();
                                     break;
                                 case 7:
-                                    System.out.println("\n\n Voce escolheu: 6 - CADASTRAR PRESENTES \n");
+                                    System.out.println("\n\n Voce escolheu: 7 - CADASTRAR PRESENTES \n");
                                     this.criarPresente();
                                     break;
                                 case 8:
-                                    System.out.println("\n\n Voce escolheu: 7 - CADASTRAR PAGAMENTOS \n");
+                                    System.out.println("\n\n Voce escolheu: 8 - CADASTRAR PAGAMENTOS \n");
                                     this.criarPagamentoQualquer();
                                     break;
                                 case 9:
-                                    System.out.println("\n\n Voce escolheu: 8 - GERAR RELATORIOS E CONVITES\n");
+                                    System.out.println("\n\n Voce escolheu: 9 - GERAR RELATORIOS E CONVITES\n");
                                     int opcMenuRelatorios = 0;
                                     
                                     do {
@@ -239,9 +238,9 @@ public class GerenciadorDeCasamento {
     }
     
     public int menuInicial() {
-        System.out.println(this.calendario.toString());
         this.calendario.verificarPagamento();
         this.fornecedorDAO.verificarVetorPagamentos();
+        System.out.println(this.calendario.toString());
         StringBuilder builder = new StringBuilder("");
 
         builder.append("\n\nSEJA BEM VINDO AO GERENCIADOR DE CASAMENTO\n\n");
@@ -490,15 +489,6 @@ public class GerenciadorDeCasamento {
         }
         f.setTelefone(telefone);
         
-        
-        /*
-        //VALOR A PAGAR
-        System.out.println("\n Qual o valor a pagar: ");
-        f.setValorAPagar(scanner.nextInt());
-        //PARCELAS
-        System.out.println("\n Esse valor vai ser pago em quantas parcelas: ");
-        f.setParcelas(scanner.nextInt());
-        */
         //ESTADO
         System.out.println("\n Qual o estado do pagamento? (pago ou em pagamento):");
         String estado = scanner.nextLine().toLowerCase();
@@ -646,7 +636,7 @@ public class GerenciadorDeCasamento {
             Pagamento pagamentoTemporario = new Pagamento(pessoa, descricao, valorParcela, parcelaTotal, parcelaAtual, dataParcela.plusMonths(parcelaAtual - 1));
             inserirNoCalendario(pagamentoTemporario);
             parcelaAtual++;
-        }while(parcelaAtual < parcelaTotal);
+        }while(parcelaAtual <= parcelaTotal);
     }
     
     private PagamentoDAO criarPagamentoFornecedor(){

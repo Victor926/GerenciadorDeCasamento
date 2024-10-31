@@ -25,8 +25,10 @@ public class Calendario {
             }
             else{
                 if(this.pagamentos[i].getDataParcela().isEqual(this.dataHoje)){
-                    this.pagamentos[i].setPago(true);
-                    System.out.println(" O pagamento " + this.pagamentos[i].getDescricao() + " foi pago hoje dia " + this.dataHoje.toString());
+                     if(this.pagamentos[i].isPagoBoolean() == false){
+                         this.pagamentos[i].setPago(true);
+                        System.out.println(" O pagamento " + this.pagamentos[i].getDescricao() + " foi pago hoje dia " + this.dataHoje.toString());
+                     }
                 }               
                 i++;
             }
@@ -57,7 +59,7 @@ public class Calendario {
         String texto = " ";
         for (Pagamento pagamento : pagamentos) {
             if(pagamento != null)
-                texto += " " + pagamento.getDescricao() + ", parcela atual:" + pagamento.getParcelaAtual() + ", total de parcelas: " + pagamento.getParcelaTotal() + ", situacao do pagamento: " + pagamento.isPago();
+                texto += "\n | " + pagamento.getDescricao() + ", parcela atual: " + pagamento.getParcelaAtual() + ", total de parcelas: " + pagamento.getParcelaTotal() + ", situacao do pagamento: " + pagamento.isPago();
         }
         return " Calendario{" + " dataHoje= " + dataHoje +", pagamentos: " + texto +  '}';
     }

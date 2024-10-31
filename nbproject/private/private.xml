@@ -5,7 +5,7 @@
             <url>src/gerenciadordecasamento/GerenciadorDeCasamento.java</url>
             <bookmark id="1">
                 <name/>
-                <line>96</line>
+                <line>94</line>
                 <key/>
             </bookmark>
         </file>
@@ -14,12 +14,14 @@
         <group>
             <file>file:/C:/Users/Ruam/Documents/GitHub/GerenciadorDeCasamento/src/gerenciadordecasamento/Pessoa.java</file>
             <file>file:/C:/Users/Ruam/Documents/GitHub/GerenciadorDeCasamento/src/gerenciadordecasamento/Usuario.java</file>
+            <file>file:/C:/Users/Ruam/Documents/GitHub/GerenciadorDeCasamento/src/gerenciadordecasamento/Recado.java</file>
             <file>file:/C:/Users/Ruam/Documents/GitHub/GerenciadorDeCasamento/src/gerenciadordecasamento/ConvidadoFamilia.java</file>
             <file>file:/C:/Users/Ruam/Documents/GitHub/GerenciadorDeCasamento/src/gerenciadordecasamento/ConvidadoIndividualDAO.java</file>
             <file>file:/C:/Users/Ruam/Documents/GitHub/GerenciadorDeCasamento/src/gerenciadordecasamento/Calendario.java</file>
             <file>file:/C:/Users/Ruam/Documents/GitHub/GerenciadorDeCasamento/src/gerenciadordecasamento/PagamentoDAO.java</file>
             <file>file:/C:/Users/Ruam/Documents/GitHub/GerenciadorDeCasamento/src/gerenciadordecasamento/GerenciadorDeCasamento.java</file>
             <file>file:/C:/Users/Ruam/Documents/GitHub/GerenciadorDeCasamento/src/gerenciadordecasamento/Cerimonial.java</file>
+            <file>file:/C:/Users/Ruam/Documents/GitHub/GerenciadorDeCasamento/src/gerenciadordecasamento/RecadoDAO.java</file>
             <file>file:/C:/Users/Ruam/Documents/GitHub/GerenciadorDeCasamento/src/gerenciadordecasamento/UsuarioDAO.java</file>
             <file>file:/C:/Users/Ruam/Documents/GitHub/GerenciadorDeCasamento/src/gerenciadordecasamento/ConvidadoIndividual.java</file>
             <file>file:/C:/Users/Ruam/Documents/GitHub/GerenciadorDeCasamento/src/gerenciadordecasamento/ConvidadoFamiliaDAO.java</file>
