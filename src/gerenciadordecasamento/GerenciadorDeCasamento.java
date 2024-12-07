@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -74,7 +75,7 @@ public class GerenciadorDeCasamento {
                     Usuario logado = this.verificarUsuarioLogado();
                     //LOGADO COMO NOIVO OU CERIMONIALISTA
                     if (logado != null && (logado.getTipo().equals("N") || logado.getTipo().equals("CE") )) {                 
-                        int opcaoLogadoNoivo = 10;
+                        int opcaoLogadoNoivo = 11;
                         
                         do {
                             opcaoLogadoNoivo = this.menuLogadoNoivo();
@@ -152,8 +153,47 @@ public class GerenciadorDeCasamento {
                                     }while(opcMenuRelatorios != 7);
                                     
                                     break;
-                                
+                                case 10:
+                                    System.out.println("Você escolheu: 10 - EXCLUSÕES");
+                                    int opcMenuExcluir = 0;
                                     
+                                    do {
+                                        opcMenuExcluir = this.menuExcluir();
+                                        switch(opcMenuExcluir) {
+                                            case 1:
+                                                if(this.excluirPessoa()){
+                                                    System.out.println("Pessoa exluída com sucesso!");   
+                                                }
+                                                break;
+                                            case 2:
+                                                //GERAR CONVITE INDIVIDUAL
+                                                this.imprimirConviteIndividual();
+                                                break;
+                                            case 3:
+                                                //GERAR CONVITE FAMILIA
+                                                this.imprimirConviteFamilia();
+                                                break;
+                                            case 4:
+                                                System.out.println(this.calendario.relatorioPagamentosNoivos(0, 1));
+                                                break;
+                                            case 5:
+                                                //LISTA DE CONVIDADOS
+                                                this.listaConvidados();
+                                                break;
+                                            case 6:
+                                                //LISTA DE CONVIDADOS CONFIRMADOS
+                                                this.gerarRelatorioConvidadosConfirmados();
+                                                break;
+                                            case 7:
+                                                //EXCLUIR X
+                                            default:
+                                                if(opcMenuExcluir!=8){
+                                                    System.out.println("\n\n Opcao Invalida! Tente Novamente!");
+                                                }
+                                                
+                                                break;
+                                        }
+                                    }while(opcMenuExcluir != 8);
                                 
                                 default:
                                     if(opcaoLogadoNoivo!=10){
@@ -161,7 +201,7 @@ public class GerenciadorDeCasamento {
                                     }  
                                     break;
                             }
-                        }while (opcaoLogadoNoivo != 10);
+                        }while (opcaoLogadoNoivo != 11);
                         
                     } else {
                         //LOGADO COMO OUTRO
@@ -463,6 +503,29 @@ public class GerenciadorDeCasamento {
             return -1;
         }
     }
+    
+    private int menuExcluir(){
+        StringBuilder builder = new StringBuilder("");
+        
+        builder.append("\n\n MENU DE EXCLUSÕES \n");
+        builder.append("\n 1 - EXCLUIR PESSOA......................");
+        builder.append("\n 2 - EXCLUIR USUÁRIO INDIVIDUAL..........");
+        builder.append("\n 3 - EXCLUIR USUÁRIO FAMILIA.............");
+        builder.append("\n 4 - EXCLUIR FORNECEDOR..................");
+        builder.append("\n 5 - EXCLUIR PAGAMENTO...................");
+        builder.append("\n 6 - EXCLUIR PRESENTE....................");
+        builder.append("\n 7 - EXCLUIR RECADO......................");
+        builder.append("\n 8 - SAIR................................");
+        builder.append("\n\n SUA OPCAO: ");
+        System.out.print(builder.toString());
+        
+        try {
+            return Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Caracter Invalido! Insira um Numero!");
+            return -1;
+        }
+    }
 
     private Fornecedor criarFornecedor() {
         
@@ -523,8 +586,8 @@ public class GerenciadorDeCasamento {
         Cerimonial cerimonial = new Cerimonial(scanner.nextLine());
         this.evento.setCerimonial(cerimonial);
         
-        this.evento.setNoivo(usuarioDAO.usuarios[0].getPessoa());
-        this.evento.setNoiva(usuarioDAO.usuarios[1].getPessoa());
+        this.evento.setNoivo(pessoaDAO.getPessoa(0));
+        this.evento.setNoiva(pessoaDAO.getPessoa(1));
         System.out.println(this.evento);
     }
 
@@ -768,8 +831,8 @@ public class GerenciadorDeCasamento {
             cf.setNome(nomeFamilia);
             //CRIANDO ACESSO
             String diaMesAno = String.format("%02d%02d%04d", LocalDate.now().getDayOfMonth(), LocalDate.now().getMonthValue(), LocalDate.now().getYear());
-            String primeiroNomeNoivo = pessoaDAO.pessoas[0].getNome().split(" ")[0];
-            String primeiroNomeNoiva = pessoaDAO.pessoas[1].getNome().split(" ")[0];
+            String primeiroNomeNoivo = pessoaDAO.getNomePessoa(0).split(" ")[0]; //MOD AQUI
+            String primeiroNomeNoiva = pessoaDAO.getNomePessoa(1).split(" ")[0]; //MOD AQUI
             String letrasAleatorias = letrasAleatorias(3);
             String acesso = diaMesAno + primeiroNomeNoivo + primeiroNomeNoiva + letrasAleatorias;
             cf.setAcesso(acesso);
@@ -807,8 +870,8 @@ public class GerenciadorDeCasamento {
         System.out.print("Para qual PESSOA deseja imprimir um Convite: ");
         String nomePessoa = scanner.nextLine();
         
-        String nomeNoivo = pessoaDAO.pessoas[0].getNome().split(" ")[0];
-        String nomeNoiva = pessoaDAO.pessoas[1].getNome().split(" ")[0];
+        String nomeNoivo = pessoaDAO.getNomePessoa(0).split(" ")[0];
+        String nomeNoiva = pessoaDAO.getNomePessoa(1).split(" ")[0];
         
         //PROCURAR CONVIDADO
         ConvidadoIndividual convidado = convidadoIndividualDAO.buscaPorNome(nomePessoa);
@@ -829,8 +892,8 @@ public class GerenciadorDeCasamento {
         System.out.print("Para qual FAMILIA deseja imprimir um Convite: ");
         String nomeFamilia = scanner.nextLine();
 
-        String nomeNoivo = pessoaDAO.pessoas[0].getNome().split(" ")[0];
-        String nomeNoiva = pessoaDAO.pessoas[1].getNome().split(" ")[0];
+        String nomeNoivo = pessoaDAO.getNomePessoa(0).split(" ")[0];
+        String nomeNoiva = pessoaDAO.getNomePessoa(1).split(" ")[0];
 
         //PROCRUAR FAMILIA CONVIDADA
         ConvidadoFamilia familia = convidadoFamiliaDAO.buscarFamiliaPorNome(nomeFamilia);
@@ -848,24 +911,50 @@ public class GerenciadorDeCasamento {
             System.out.println("A familia não está na lista de convidados.");
         }
     }
-
-    public void gerarRelatorioConvidadosConfirmados() {
-        
-        double totalPontos = 0;
-        totalPontos = convidadoIndividualDAO.mostrarConfirmados(totalPontos);
-
-        //LISTAR FORNECEDORES
-        Fornecedor[] fornecedores = fornecedorDAO.fornecedores;
-        for (Fornecedor f : fornecedores) {
-            if (f != null) {
-                double pontosFornecedor = 0.5;
-                System.out.println("FORNECEDOR: " + f.getNome() + " | Pontos: " + pontosFornecedor);
-                totalPontos += pontosFornecedor;
-            }
+    
+    
+    //EXCLUSÕES
+    private boolean excluirPessoa(){
+        System.out.println("Qual o id da pessoa que deseja excluir?");
+        long idPessoa = scanner.nextLong();
+        if(idPessoa == 0 || idPessoa == 1){
+            System.out.println("Não é possivel excluir a pessoa noivo ou noiva");
+            return false;
         }
-
-        System.out.printf("\nPONTUACAO TOTAL: %.1f%n", totalPontos);
+        //VERIFICAR SE EXISTE CONVITE INDIVIDUAL PARA ESSA PESSOA E EXCLUIR
+        if(this.convidadoIndividualDAO.buscaPorId(idPessoa)){
+            this.convidadoIndividualDAO.removerPorIdPessoa(idPessoa);
+            System.out.println("Convite da pessoa excluído");
+        }
+        
+        //VERIFICAR SE EXISTE USUÁRIO COM O ID DESSA PESSOA
+        if(this.usuarioDAO.buscarPorPessoaId(idPessoa)){
+            this.usuarioDAO.removerPorIdPessoa(idPessoa);
+            System.out.println("Usuário da pessoa excluído");
+        }
+        
+        //
+        return pessoaDAO.remover(idPessoa);
     }
+
+public void gerarRelatorioConvidadosConfirmados() {
+        
+    double totalPontos = 0;
+    totalPontos = convidadoIndividualDAO.mostrarConfirmados(totalPontos);
+
+    // LISTAR FORNECEDORES
+    ArrayList<Fornecedor> fornecedores = fornecedorDAO.getFornecedores();  // Acessa o ArrayList diretamente
+    for (Fornecedor f : fornecedores) {
+        if (f != null) {
+            double pontosFornecedor = 0.5;
+            System.out.println("FORNECEDOR: " + f.getNome() + " | Pontos: " + pontosFornecedor);
+            totalPontos += pontosFornecedor;
+        }
+    }
+
+    System.out.printf("\nPONTUACAO TOTAL: %.1f%n", totalPontos);
+}
+
 
     
 
