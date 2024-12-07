@@ -8,75 +8,59 @@ package gerenciadordecasamento;
  *
  * @author victo
  */
+import java.util.ArrayList;
+
 public class FornecedorDAO {
-    
-    Fornecedor[] fornecedores = new Fornecedor[100];
-    
-    boolean adiciona(Fornecedor fornecedor) {
-        int proximaPosicaoLivre = this.proximaPosicaoLivre();
-        if (proximaPosicaoLivre != -1) {
-            fornecedores[proximaPosicaoLivre] = fornecedor;
-            return true;
-        }
-        return false;
+
+    private ArrayList<Fornecedor> fornecedores = new ArrayList<>();
+
+    public boolean adiciona(Fornecedor fornecedor) {
+        return fornecedores.add(fornecedor); // Adiciona diretamente à lista
     }
-    
+
     public boolean vazio() {
-        for (Fornecedor fornecedor : fornecedores) {
-            if (fornecedor != null) {
-                return false;
-            }
-        }
-        return true;
+        return fornecedores.isEmpty(); // Verifica se a lista está vazia
     }
-    
+
     public void mostrar() {
-        boolean temFornecedor = false;
-        for (Fornecedor f : fornecedores) {
-            if (f != null) {
-                System.out.println(f);
-                temFornecedor = true;
-            }
-        }
-        if (!temFornecedor) {
+        if (fornecedores.isEmpty()) {
             System.out.println("Nao ha fornecedores cadastrados.");
+        } else {
+            for (Fornecedor f : fornecedores) {
+                System.out.println(f);
+            }
         }
     }
 
     public boolean remover(String nome) {
-        for (int i = 0; i < fornecedores.length; i++) {
-            if (fornecedores[i] != null && fornecedores[i].getNome().equals(nome)) {
-                fornecedores[i] = null;
+        for (Fornecedor f : fornecedores) {
+            if (f != null && f.getNome().equals(nome)) {
+                fornecedores.remove(f);
                 return true;
             }
         }
         return false;
     }
 
-    public int proximaPosicaoLivre() {
-        for (int i = 0; i < fornecedores.length; i++) {
-            if (fornecedores[i] == null) {
-                return i;
-            }
-        }
-        return -1;
-    }
-    
     public Fornecedor buscaPorCnpj(String cnpj) {
-    for (Fornecedor fornecedor : fornecedores) {
-        if (fornecedor != null && fornecedor.getCnpj().equals(cnpj)) {
-            return fornecedor;
-        }
-    }
-    return null;
-}
-    public void verificarVetorPagamentos(){
-        for (Fornecedor fornecedore : this.fornecedores) {
-            if (fornecedore != null) {
-                fornecedore.verificarPagamento();
+        for (Fornecedor f : fornecedores) {
+            if (f != null && f.getCnpj().equals(cnpj)) {
+                return f;
             }
         }
+        return null;
     }
 
+    public void verificarVetorPagamentos() {
+        for (Fornecedor f : fornecedores) {
+            if (f != null) {
+                f.verificarPagamento();
+            }
+        }
+    }
     
+    public ArrayList<Fornecedor> getFornecedores() {
+        return fornecedores;
+    }
 }
+

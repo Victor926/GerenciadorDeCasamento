@@ -4,110 +4,80 @@
  */
 package gerenciadordecasamento;
 
+import java.util.ArrayList;
 import java.time.LocalDate;
 import java.time.Period;
 
 public class ConvidadoIndividualDAO {
-    
-    ConvidadoIndividual[] convidadosIndividuais = new ConvidadoIndividual[100];
-    
-    boolean adiciona(ConvidadoIndividual ci) {
-        int proximaPosicaoLivre = this.proximaPosicaoLivre();
-        if (proximaPosicaoLivre != -1) {
-            convidadosIndividuais[proximaPosicaoLivre] = ci;
-            return true;
-        } else {
-            return false;
-        }
+
+    private ArrayList<ConvidadoIndividual> convidadosIndividuais = new ArrayList<>();
+
+    public boolean adiciona(ConvidadoIndividual ci) {
+        return convidadosIndividuais.add(ci); // Adiciona diretamente à lista
     }
-    
+
     public boolean vazio() {
-        for (ConvidadoIndividual ci : convidadosIndividuais) {
-            if (ci != null) {
-                return false;
-            }
-        }
-        return true;
+        return convidadosIndividuais.isEmpty(); // Verifica se a lista está vazia
     }
-    
+
     public void mostrar() {
         StringBuilder sb = new StringBuilder();
-        boolean temFamilia = false;
-        
-        for (ConvidadoIndividual ci : convidadosIndividuais) {
-            if (ci != null) {
+        if (convidadosIndividuais.isEmpty()) {
+            sb.append("Nao ha CONVIDADOS INDIVIDUAIS cadastrados");
+        } else {
+            for (ConvidadoIndividual ci : convidadosIndividuais) {
                 sb.append(ci).append("\n");
-                temFamilia = true;
             }
         }
-        
-        if (!temFamilia) {
-            sb.append("Nao ha CONVIDADOS INDIVIDUAIS cadastrados");
-        }
-        
         System.out.println(sb.toString());
     }
-    
+
     public double mostrarConfirmados(double totalPontos) {
-        boolean temFamilia = false;
+        boolean temConfirmados = false;
         totalPontos = 0;
-        
+
         System.out.println("-------- LISTA DE CONVIDADOS CONFIRMADOS --------:");
         System.out.println("\n NOME \t\t IDADE \t\t PONTOS\n");
         for (ConvidadoIndividual ci : convidadosIndividuais) {
-            if (ci != null) {
-                if (ci.isConfirmacao().equals("confirmado")) {
-                    temFamilia = true;
-                    Pessoa pessoa = ci.getPessoa();
-                    int idade = calcularIdade(pessoa.getDataNascimento());
+            if (ci != null && ci.isConfirmacao().equals("confirmado")) {
+                temConfirmados = true;
+                Pessoa pessoa = ci.getPessoa();
+                int idade = calcularIdade(pessoa.getDataNascimento());
 
-                    double pontos;
-                    if (idade <= 8) {
-                        // CRIANCAS QUE NAO CONTAM
-                        pontos = 0;
-                    } else if (idade >= 9 && idade <= 13) {
-                        // CRIANCAS QUE CONTAM
-                        pontos = 0.5;
-                    } else {
-                        // ADULTOS
-                        pontos = 1.0;
-                    }
-
-                    System.out.printf("%s\t\t%d\t\t%.1f%n", pessoa.getNome(), idade, pontos);
-                    totalPontos += pontos;
+                double pontos;
+                if (idade <= 8) {
+                    pontos = 0; // Crianças que não contam
+                } else if (idade >= 9 && idade <= 13) {
+                    pontos = 0.5; // Crianças que contam
+                } else {
+                    pontos = 1.0; // Adultos
                 }
+
+                System.out.printf("%s\t\t%d\t\t%.1f%n", pessoa.getNome(), idade, pontos);
+                totalPontos += pontos;
             }
         }
-        
-        if (!temFamilia) {
+
+        if (!temConfirmados) {
             System.out.println("Nao ha CONVIDADOS INDIVIDUAIS cadastrados");
         }
-        
+
         return totalPontos;
     }
-    
+
     private int calcularIdade(LocalDate dataNascimento) {
         return Period.between(dataNascimento, LocalDate.now()).getYears();
     }
-    
-    public int proximaPosicaoLivre() {
-        for (int i = 0; i < convidadosIndividuais.length; i++) {
-            if (convidadosIndividuais[i] == null) {
-                return i;
-            }
-        }
-        return -1;
-    }
-    
+
     public ConvidadoIndividual buscaPorPessoa(Pessoa pessoa) {
         for (ConvidadoIndividual ci : convidadosIndividuais) {
             if (ci != null && ci.getPessoa().equals(pessoa)) {
-                return ci; 
+                return ci;
             }
         }
         return null;
     }
-    
+
     public ConvidadoIndividual buscaPorNome(String nome) {
         for (ConvidadoIndividual ci : convidadosIndividuais) {
             if (ci != null && ci.getPessoa().getNome().equalsIgnoreCase(nome)) {
@@ -116,33 +86,41 @@ public class ConvidadoIndividualDAO {
         }
         return null;
     }
+    
+    public boolean buscaPorId(Long id) {
+        for (ConvidadoIndividual ci : convidadosIndividuais) {
+            if (ci != null && ci.getPessoa().getId() == id) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public void confirmarPresenca(ConvidadoFamilia familia, String confirmacao) {
         for (ConvidadoIndividual ci : convidadosIndividuais) {
-            if (ci != null) {
-                if (ci.getFamilia().equals(familia)) {
-                    ci.setConfirmacao(confirmacao);
-                }
+            if (ci != null && ci.getFamilia().equals(familia)) {
+                ci.setConfirmacao(confirmacao);
             }
         }
     }
 
-    public ConvidadoIndividual[] obterConvidadosConfirmados() {
-        ConvidadoIndividual[] convidadosConfirmados = new ConvidadoIndividual[100];
-        int count = 0;
-
+    public ArrayList<ConvidadoIndividual> obterConvidadosConfirmados() {
+        ArrayList<ConvidadoIndividual> convidadosConfirmados = new ArrayList<>();
         for (ConvidadoIndividual ci : convidadosIndividuais) {
-            if (ci != null && ci.isConfirmacao().equals("confirmado")) { 
-                if (count < convidadosConfirmados.length) {
-                    convidadosConfirmados[count] = ci;
-                    count++;
-                } else {
-                    System.out.println("Limite de convidados confirmados atingido.");
-                    break;
-                }
+            if (ci != null && ci.isConfirmacao().equals("confirmado")) {
+                convidadosConfirmados.add(ci);
             }
+        }
+
+        if (convidadosConfirmados.isEmpty()) {
+            System.out.println("Nenhum convidado confirmado.");
         }
 
         return convidadosConfirmados;
     }
+    
+    public boolean removerPorIdPessoa(long idPessoa){
+        return convidadosIndividuais.removeIf(p -> p.getPessoa().getId() == idPessoa);
+    }
 }
+

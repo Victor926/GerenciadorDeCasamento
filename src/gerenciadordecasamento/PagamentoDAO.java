@@ -4,32 +4,26 @@
  */
 package gerenciadordecasamento;
 
-public class PagamentoDAO {
-    //ESTE SERVE ESPECIFICAMENTE PARA OS FORNECEDORES
-    private Pagamento[] pagamentos = new Pagamento[300];
-    private int indiceAtual = 0;
+import java.util.ArrayList;
 
-    public void setPagamentos(Pagamento[] pagamentos) {
-        this.pagamentos = pagamentos;
+public class PagamentoDAO {
+    // ESTE SERVE ESPECIFICAMENTE PARA OS FORNECEDORES
+    private ArrayList<Pagamento> pagamentos = new ArrayList<>();
+
+ 
+    public void adicionar(Pagamento pagamento) {
+        this.pagamentos.add(pagamento); // Adiciona diretamente na lista
     }
-    
-    public void adicionar(Pagamento pagamento){
-        this.pagamentos[indiceAtual] = pagamento;
-        this.indiceAtual++;
-    }
-    
-    public boolean verificarPagamentoCompleto(){
-        int i = 0;
+
+    public boolean verificarPagamentoCompleto() {
         int contadorDePago = 0;
-        while(i < this.pagamentos.length){
-            if(this.pagamentos[i] != null){
-                if(this.pagamentos[i].isPagoBoolean()){
+
+        for (Pagamento pagamento : pagamentos) {
+            if (pagamento.isPagoBoolean()) {
                 contadorDePago++;
-                }
             }
-            i++;
         }
-        return indiceAtual + 1 == contadorDePago;
+
+        return pagamentos.size() == contadorDePago; // Compara o tamanho da lista com os pagos
     }
-    
 }

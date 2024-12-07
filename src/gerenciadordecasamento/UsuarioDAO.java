@@ -8,57 +8,48 @@ package gerenciadordecasamento;
  *
  * @author victo
  */
+import java.util.ArrayList;
+
 public class UsuarioDAO {
-    
-    Usuario[] usuarios = new Usuario[100]; 
-    
-    boolean adiciona(Usuario usuario) {
-        
-            int proximaPosicaoLivre = this.proximaPosicaoLivre();
-            if (proximaPosicaoLivre != -1) {
-                usuarios[proximaPosicaoLivre] = usuario;
-                return true;
-            }
-            return false;
-        
+
+    private ArrayList<Usuario> usuarios = new ArrayList<>();
+
+    public boolean adiciona(Usuario usuario) {
+        return usuarios.add(usuario); // Adiciona o usuário ao ArrayList
     }
 
     public boolean vazio() {
-        for (Usuario usuario : usuarios) {
-            if (usuario != null) {
-                return false;
-            }
-        }
-        return true;
+        return usuarios.isEmpty(); // Verifica se o ArrayList está vazio
     }
-    
+
     public void mostrar() {
-        boolean temUsuario = false;
-        for (Usuario u : usuarios) {
-            if (u != null) {
-                System.out.println(u);
-                temUsuario = true;
-            }
-        }
-        if (!temUsuario) {
+        if (usuarios.isEmpty()) {
             System.out.println("Nao ha usuarios cadastrados.");
+            return;
+        }
+        for (Usuario u : usuarios) {
+            System.out.println(u);
         }
     }
-    
-    Usuario buscaUsuarioLogin(String login, String senha) {
-         for (Usuario u : usuarios) {
-            if (u != null && u.getLogin().equals(login) &&
-                    u.getSenha().equals(senha)) {
+
+    public Pessoa getPessoa(int index){
+        if (index >= 0 && index < usuarios.size()) {
+            return usuarios.get(index).getPessoa();
+        }
+        return null; // Retorna null se o índice for inválido
+    }
+    public Usuario buscaUsuarioLogin(String login, String senha) {
+        for (Usuario u : usuarios) {
+            if (u.getLogin().equals(login) && u.getSenha().equals(senha)) {
                 return u;
             }
         }
         return null;
     }
-   
 
     public boolean alterarLogin(String login, String novoLogin) {
         for (Usuario usuario : usuarios) {
-            if (usuario != null && usuario.getLogin().equals(login)) {
+            if (usuario.getLogin().equals(login)) {
                 usuario.setLogin(novoLogin);
                 return true;
             }
@@ -68,7 +59,7 @@ public class UsuarioDAO {
 
     public Usuario buscaPorLogin(String login) {
         for (Usuario u : usuarios) {
-            if (u != null && u.getLogin().equals(login)) {
+            if (u.getLogin().equals(login)) {
                 return u;
             }
         }
@@ -76,31 +67,40 @@ public class UsuarioDAO {
     }
 
     public boolean remover(String login) {
-        for (int i = 0; i < usuarios.length; i++) {
-            if (usuarios[i] != null && usuarios[i].getLogin().equals(login)) {
-                usuarios[i] = null;
+        for (Usuario u : usuarios) {
+            if (u.getLogin().equals(login)) {
+                usuarios.remove(u); // Remove o usuário do ArrayList
                 return true;
             }
         }
         return false;
     }
-
-    public int proximaPosicaoLivre() {
-        for (int i = 0; i < usuarios.length; i++) {
-            if (usuarios[i] == null) {
-                return i;
+    
+    public boolean removerPorIdPessoa(Long idPessoa) {
+        for (Usuario u : usuarios) {
+            if (u.getPessoa().getId() == idPessoa) {
+                return usuarios.remove(u); // Remove o usuário do ArrayList
             }
         }
-        return -1;
+        return false;
     }
-    
-    public boolean buscarPorId(long id){
+
+    public boolean buscarPorId(long id) {
         for (Usuario usuario : usuarios) {
-        if (usuario != null && usuario.getId() == id) { 
-            return true; 
+            if (usuario.getId() == id) {
+                return true;
+            }
         }
+        return false;
     }
-    return false;
+    public boolean buscarPorPessoaId(long idPessoa){
+        for (Usuario usuario : usuarios) {
+            if (usuario != null && usuario.getPessoa().getId() == idPessoa) {
+                return true;
+            }
+        }
+        return false;
     }
 }
+
 

@@ -8,51 +8,27 @@ package gerenciadordecasamento;
  *
  * @author victo
  */
+import java.util.ArrayList;
+
 public class RecadoDAO {
-    
-    Recado[] recados = new Recado[100];
-    
-    boolean adiciona(Recado recado) {
-        int proximaPosicaoLivre = this.proximaPosicaoLivre();
-        if (proximaPosicaoLivre != -1) {
-            recados[proximaPosicaoLivre] = recado;
-            return true;
-        }
-        return false;
+
+    private ArrayList<Recado> recados = new ArrayList<>();
+
+    public boolean adiciona(Recado recado) {
+        return recados.add(recado); // O método add do ArrayList já gerencia a adição
     }
-    
+
     public boolean vazio() {
-        for (Recado recado : recados) {
-            if (recado != null) {
-                return false;
-            }
-        }
-        return true;
+        return recados.isEmpty(); // Usa isEmpty para verificar se a lista está vazia
     }
-    
+
     public void mostrar() {
-        boolean temRecado = false;
-        for (Recado r : recados) {
-            if (r != null) {
-                System.out.println(r);
-                temRecado = true;
-            }
-        }
-        if (!temRecado) {
+        if (recados.isEmpty()) {
             System.out.println("Nao ha recados cadastrados.");
+            return;
+        }
+        for (Recado r : recados) {
+            System.out.println(r);
         }
     }
-    
-
-
-
-    public int proximaPosicaoLivre() {
-        for (int i = 0; i < recados.length; i++) {
-            if (recados[i] == null) {
-                return i;
-            }
-        }
-        return -1;
-    }
-    
 }
