@@ -955,7 +955,6 @@ public void gerarRelatorioConvidadosConfirmados() {
     System.out.printf("\nPONTUACAO TOTAL: %.1f%n", totalPontos);
 }
 
-
     
 
     
