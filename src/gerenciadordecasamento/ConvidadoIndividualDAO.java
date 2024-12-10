@@ -7,6 +7,7 @@ package gerenciadordecasamento;
 import java.util.ArrayList;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Iterator;
 
 public class ConvidadoIndividualDAO {
 
@@ -133,6 +134,19 @@ public class ConvidadoIndividualDAO {
             }
         }
         return false;
+    }
+    public boolean removerPorFamiliaId(long idFamilia) {
+    int cont = 0;
+    Iterator<ConvidadoIndividual> iterator = convidadosIndividuais.iterator();
+
+    while (iterator.hasNext()) {
+        ConvidadoIndividual ci = iterator.next();
+        if (ci != null && ci.getFamilia().getId() == idFamilia) {
+                iterator.remove();
+                cont++;
+            }
+        }
+        return cont != 0;
     }
 
 }

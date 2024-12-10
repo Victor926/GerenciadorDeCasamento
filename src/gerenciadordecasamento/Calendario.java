@@ -5,84 +5,67 @@
 package gerenciadordecasamento;
 
 import java.time.LocalDate;
-
+import java.util.ArrayList;
+import java.util.List;
 
 public class Calendario {
-    private Pagamento[] pagamentos = new Pagamento[300];
+    private List<Pagamento> pagamentos = new ArrayList<>();
     private LocalDate dataHoje = LocalDate.now();
-    
-    public Pagamento[] getPagamentos() {
+
+    public List<Pagamento> getPagamentos() {
         return pagamentos;
     }
-    
-    public void verificarPagamento(){
-       this.dataHoje = LocalDate.now();
-        int i = 0;
-        while(i<this.pagamentos.length){
-            if(this.pagamentos[i] == null)
-            {
-                i++;
-            }
-            else{
-                if(this.pagamentos[i].getDataParcela().isEqual(this.dataHoje)){
-                     if(this.pagamentos[i].isPagoBoolean() == false){
-                         this.pagamentos[i].setPago(true);
-                        System.out.println(" O pagamento " + this.pagamentos[i].getDescricao() + " foi pago hoje dia " + this.dataHoje.toString());
-                     }
-                }               
-                i++;
+
+    public void verificarPagamento() {
+        this.dataHoje = LocalDate.now();
+        for (Pagamento pagamento : pagamentos) {
+            if (pagamento != null && pagamento.getDataParcela().isEqual(this.dataHoje)) {
+                if (!pagamento.isPagoBoolean()) {
+                    pagamento.setPago(true);
+                    System.out.println("O pagamento " + pagamento.getDescricao() +
+                            " foi pago hoje, dia " + this.dataHoje.toString());
+                }
             }
         }
     }
-    
-    public int proximaPosicaoLivre() {
-        for (int i = 0; i < pagamentos.length; i++) {
-            if (pagamentos[i] == null) {
-                return i;
-            }
-        }
-        return -1;
-    }
-    
-    boolean adiciona(Pagamento p) {
-        int proximaPosicaoLivre = this.proximaPosicaoLivre();
-        if (proximaPosicaoLivre != -1) {
-            pagamentos[proximaPosicaoLivre] = p;
+
+    public boolean adiciona(Pagamento p) {
+        if (p != null) {
+            pagamentos.add(p); // Adiciona diretamente ao ArrayList
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     @Override
     public String toString() {
-        String texto = " ";
+        StringBuilder texto = new StringBuilder();
         for (Pagamento pagamento : pagamentos) {
-            if(pagamento != null)
-                texto += "\n | " + pagamento.getDescricao() + ", parcela atual: " + pagamento.getParcelaAtual() + ", total de parcelas: " + pagamento.getParcelaTotal() + ", situacao do pagamento: " + pagamento.isPago();
+            if (pagamento != null) {
+                texto.append("\n | ").append(pagamento.getDescricao())
+                        .append(", parcela atual: ").append(pagamento.getParcelaAtual())
+                        .append(", total de parcelas: ").append(pagamento.getParcelaTotal())
+                        .append(", situação do pagamento: ").append(pagamento.isPago());
+            }
         }
-        return " Calendario{" + " dataHoje= " + dataHoje +", pagamentos: " + texto +  '}';
+        return "Calendario{" + "dataHoje= " + dataHoje + ", pagamentos:" + texto + '}';
     }
-    
-    public String relatorioPagamentosNoivos(long idNoivo, long idNoiva){
+
+    public String relatorioPagamentosNoivos(long idNoivo, long idNoiva) {
         double valorTotal = 0;
-        String retorno ="Pagamentos realizados pelos noivos: \n";
+        StringBuilder retorno = new StringBuilder("Pagamentos realizados pelos noivos:\n");
+
         for (Pagamento pagamento : pagamentos) {
-            if(pagamento != null){
-                if(pagamento.getIdPessoa() ==idNoivo || pagamento.getIdPessoa() == idNoiva){
-                    valorTotal += pagamento.getValor();
-                    retorno += " | " + pagamento.getDescricao() + ", parcela atual:" + pagamento.getParcelaAtual() + ", total de parcelas: " + pagamento.getParcelaTotal() + ", situacao do pagamento: " + pagamento.isPago() + "\n";
-                }
-            }   
+            if (pagamento != null && (pagamento.getIdPessoa() == idNoivo || pagamento.getIdPessoa() == idNoiva)) {
+                valorTotal += pagamento.getValor();
+                retorno.append(" | ").append(pagamento.getDescricao())
+                        .append(", parcela atual: ").append(pagamento.getParcelaAtual())
+                        .append(", total de parcelas: ").append(pagamento.getParcelaTotal())
+                        .append(", situação do pagamento: ").append(pagamento.isPago()).append("\n");
+            }
         }
-        retorno += "\n Valor total a ser pago: " + valorTotal;
-        if(valorTotal == 0){
-            return "Os noivos nao fizeram nenhum pagamento";
-        }
-        else{
-            return retorno;
-        }
-        
+
+        retorno.append("\nValor total a ser pago: ").append(valorTotal);
+        return valorTotal == 0 ? "Os noivos não fizeram nenhum pagamento" : retorno.toString();
     }
-    
 }

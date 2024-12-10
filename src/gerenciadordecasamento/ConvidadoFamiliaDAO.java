@@ -87,9 +87,8 @@ public class ConvidadoFamiliaDAO {
     
     public boolean remover(long idFamilia) {
         for (int i = 0; i < familias.size(); i++) { 
-            ConvidadoFamilia familia = familias.get(i); 
-            if (familia != null && familia.getId() == idFamilia) {
-                familias.remove(i); 
+            if (familias.get(i).getId() == idFamilia) {
+                familias.remove(i);
                 return true;
             }
         }

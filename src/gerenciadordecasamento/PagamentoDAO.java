@@ -26,4 +26,10 @@ public class PagamentoDAO {
 
         return pagamentos.size() == contadorDePago; // Compara o tamanho da lista com os pagos
     }
+
+    public ArrayList<Pagamento> getPagamentos() {
+        return pagamentos;
+    }
+    
+    
 }

@@ -155,7 +155,7 @@ public class GerenciadorDeCasamento {
                                     break;
                                 case 10:
                                     System.out.println("\n Voce escolheu: 10 - MENU DE EXCLUSOES");
-                                    int opcMenuExcluir = 0;
+                                    int opcMenuExcluir;
                                     
                                     do {
                                         opcMenuExcluir = this.menuExcluir();
@@ -186,15 +186,21 @@ public class GerenciadorDeCasamento {
                                                 break;
                                             case 4:
                                                 //EXCLUIR CONVITE FAMILIA
-                                                if(this.excluirConviteIndividual()) {
-                                                    System.out.println("\n Convite Individual excluido com sucesso");
+                                                if(this.excluirConviteFamilia()) {
+                                                    System.out.println("\n Convite Familia excluido com sucesso");
                                                 }
                                                 else {
-                                                    System.out.println("\n Nao foi possivel excluir o convite individual");
+                                                    System.out.println("\n Nao foi possivel excluir o convite familia");
                                                 }
                                                 break;
                                             case 5:
                                                 //EXCLUIR FORNECEDOR
+                                                if(this.excluirFornecedor()){
+                                                    System.out.println("\n Fornecedor excluido com sucesso");
+                                                }
+                                                else{
+                                                    System.out.println("\n Nao foi possivel excluir o fornecedor");
+                                                }
                                                 break;
                                             case 6:
                                                 //EXCLUIR PAGAMENTO
@@ -224,7 +230,7 @@ public class GerenciadorDeCasamento {
                                                 
                                                 break;
                                         }
-                                    }while(opcMenuExcluir != 8);
+                                    }while(opcMenuExcluir != 9);
                                 
                                 default:
                                     if(opcaoLogadoNoivo!=10){
@@ -825,7 +831,7 @@ public class GerenciadorDeCasamento {
 
         //ADICIONADO O CONVIDADO
         if (convidadoIndividualDAO.adiciona(ci)) {
-            System.out.println("\n Convidado ADICIONADO!");
+            System.out.println("\n Convidado: "+ ci +" ADICIONADO!");
             return ci;
         } else {
             System.out.println("\nNAO foi possivel fazer o convite! Tente Novamente!");
@@ -870,7 +876,7 @@ public class GerenciadorDeCasamento {
             String acesso = diaMesAno + primeiroNomeNoivo + primeiroNomeNoiva + letrasAleatorias;
             cf.setAcesso(acesso);
             if(convidadoFamiliaDAO.adiciona(cf)) {
-                System.out.println("\n FAMILIA convidada! O acesso eh o seguinte: " + acesso);
+                System.out.println("\n FAMILIA com o id: "+ cf.getId() +" convidada! O acesso eh o seguinte: " + acesso);
                 return cf;
             }
             else {
@@ -1009,12 +1015,11 @@ public class GerenciadorDeCasamento {
         }
     }
     
-    /**
+  
     
-    * private boolean excluirConviteFamilia() {
+    private boolean excluirConviteFamilia() {
         System.out.println("\n Qual o ID do convite familia que deseja excluir?");
         long idFamilia = scanner.nextLong();
-        scanner.nextLine();
 
         if (convidadoFamiliaDAO.buscarPorId(idFamilia)) {
            //EXCLUIR TODOS DA FAMILIA
@@ -1038,8 +1043,26 @@ public class GerenciadorDeCasamento {
         }
     }
 
-* 
-    */
+    private boolean excluirFornecedor(){
+        System.out.println("Qual o id do fornecedor que deseja excluir?");
+        long idFornecedor = scanner.nextLong();
+        if(fornecedorDAO.buscarPorId(idFornecedor)){
+            //APAGAR OS PAGAMENTOS LINKADOS AO FORNECEDOR
+            PagamentoDAO pTemporario = fornecedorDAO.removerPagamentos(idFornecedor);
+            if(pTemporario != null){
+                int tamanho = pTemporario.getPagamentos().size();
+                int i = 0;
+                while(i < tamanho-1){
+                    long idTemporario = pTemporario.getPagamentos().get(i).getId();
+                    
+                }
+            }
+            return fornecedorDAO.removerPorId(idFornecedor);
+        }
+        else{
+            return false;
+        }
+    }
     
     private boolean excluirPresente() {
         System.out.println("\n Qual o id do presente que deseja excluir: ");

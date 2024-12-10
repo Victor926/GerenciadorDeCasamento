@@ -100,6 +100,10 @@ public class Fornecedor {
         return hash;
     }
 
+    public PagamentoDAO getPagamento() {
+        return pagamento;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {

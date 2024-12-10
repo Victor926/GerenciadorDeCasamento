@@ -41,6 +41,19 @@ public class FornecedorDAO {
         }
         return false;
     }
+    
+    public boolean removerPorId(long idFornecedor) {
+        return fornecedores.removeIf(f -> f != null && f.getId() == idFornecedor);
+    }
+    
+    public PagamentoDAO removerPagamentos(long idFornecedor){
+        for(Fornecedor f : fornecedores){
+            if(f != null && f.getId() == idFornecedor){
+                return f.getPagamento();
+            }
+        }
+        return null;
+    }
 
     public Fornecedor buscaPorCnpj(String cnpj) {
         for (Fornecedor f : fornecedores) {
@@ -57,6 +70,15 @@ public class FornecedorDAO {
                 f.verificarPagamento();
             }
         }
+    }
+    
+    public boolean buscarPorId(long idFornecedor){
+        for(Fornecedor f : fornecedores){
+            if(f != null && f.getId() == idFornecedor){
+                return true;
+            }
+        }
+        return false;
     }
     
     public ArrayList<Fornecedor> getFornecedores() {
