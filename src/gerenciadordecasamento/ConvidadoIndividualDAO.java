@@ -103,6 +103,7 @@ public class ConvidadoIndividualDAO {
             }
         }
     }
+    
 
     public ArrayList<ConvidadoIndividual> obterConvidadosConfirmados() {
         ArrayList<ConvidadoIndividual> convidadosConfirmados = new ArrayList<>();
@@ -122,5 +123,17 @@ public class ConvidadoIndividualDAO {
     public boolean removerPorIdPessoa(long idPessoa){
         return convidadosIndividuais.removeIf(p -> p.getPessoa().getId() == idPessoa);
     }
+    
+    public boolean remover(long idConvidado) {
+        for (int i = 0; i < convidadosIndividuais.size(); i++) {
+            ConvidadoIndividual convidado = convidadosIndividuais.get(i);
+            if (convidado != null && convidado.getId() == idConvidado) {
+                convidadosIndividuais.remove(i);
+                return true; 
+            }
+        }
+        return false;
+    }
+
 }
 

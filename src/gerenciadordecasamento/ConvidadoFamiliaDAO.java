@@ -9,6 +9,7 @@ package gerenciadordecasamento;
  * @author victo
  */
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class ConvidadoFamiliaDAO {
 
@@ -35,6 +36,15 @@ public class ConvidadoFamiliaDAO {
     public boolean buscaPorNome(String nome) {
         for (ConvidadoFamilia f : familias) {
             if (f != null && f.getNome() != null && f.getNome().equalsIgnoreCase(nome)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean buscarPorId(long id) {
+        for (ConvidadoFamilia ca : familias) {
+            if (ca != null && ca.getId() == id) {
                 return true;
             }
         }
@@ -74,5 +84,18 @@ public class ConvidadoFamiliaDAO {
         }
         return null;
     }
+    
+    public boolean remover(long idFamilia) {
+        for (int i = 0; i < familias.size(); i++) { 
+            ConvidadoFamilia familia = familias.get(i); 
+            if (familia != null && familia.getId() == idFamilia) {
+                familias.remove(i); 
+                return true;
+            }
+        }
+        return false;
+    }
+
+
 }
 
