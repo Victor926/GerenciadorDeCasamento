@@ -62,4 +62,10 @@ public class PresenteDAO {
         System.out.println("Esse PRESENTE nao foi encontrado! Tente outro!");
         return false;
     }
+    
+    public boolean removerPresente(Long idPresente) {
+        return presentes.removeIf(presente -> presente.getId() == idPresente);
+    }
+
+    
 }

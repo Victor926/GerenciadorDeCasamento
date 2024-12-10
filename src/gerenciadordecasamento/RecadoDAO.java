@@ -31,4 +31,9 @@ public class RecadoDAO {
             System.out.println(r);
         }
     }
+    
+    public boolean remover(Long idRecado) {
+        return recados.removeIf(r -> r.getId() == idRecado);
+    }
+    
 }
