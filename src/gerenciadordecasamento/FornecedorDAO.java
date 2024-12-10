@@ -46,7 +46,7 @@ public class FornecedorDAO {
         return fornecedores.removeIf(f -> f != null && f.getId() == idFornecedor);
     }
     
-    public PagamentoDAO removerPagamentos(long idFornecedor){
+    public PagamentoDAO getPagamentos(long idFornecedor){
         for(Fornecedor f : fornecedores){
             if(f != null && f.getId() == idFornecedor){
                 return f.getPagamento();

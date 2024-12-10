@@ -45,7 +45,8 @@ public class Calendario {
                 texto.append("\n | ").append(pagamento.getDescricao())
                         .append(", parcela atual: ").append(pagamento.getParcelaAtual())
                         .append(", total de parcelas: ").append(pagamento.getParcelaTotal())
-                        .append(", situação do pagamento: ").append(pagamento.isPago());
+                        .append(", situação do pagamento: ").append(pagamento.isPago())
+                        .append(", Id: ").append(pagamento.getId());
             }
         }
         return "Calendario{" + "dataHoje= " + dataHoje + ", pagamentos:" + texto + '}';
@@ -61,11 +62,24 @@ public class Calendario {
                 retorno.append(" | ").append(pagamento.getDescricao())
                         .append(", parcela atual: ").append(pagamento.getParcelaAtual())
                         .append(", total de parcelas: ").append(pagamento.getParcelaTotal())
-                        .append(", situação do pagamento: ").append(pagamento.isPago()).append("\n");
+                        .append(", situacao do pagamento: ").append(pagamento.isPago());
             }
         }
 
         retorno.append("\nValor total a ser pago: ").append(valorTotal);
         return valorTotal == 0 ? "Os noivos não fizeram nenhum pagamento" : retorno.toString();
+    }
+    
+    public boolean excluirPagamento(long idPagamento){
+        return pagamentos.removeIf(p -> p.getId() == idPagamento);
+    }
+    
+    public Pagamento getPagamentoPeloId(long idPagamento){
+        for(Pagamento p : pagamentos){
+            if(p != null & p.getId() == idPagamento){
+                return p;
+            }
+        }
+        return null;
     }
 }

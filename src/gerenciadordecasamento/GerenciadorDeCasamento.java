@@ -154,91 +154,93 @@ public class GerenciadorDeCasamento {
                                     
                                     break;
                                 case 10:
-                                    System.out.println("\n Voce escolheu: 10 - MENU DE EXCLUSOES");
+                                    System.out.println("\n Você escolheu: 10 - MENU DE EXCLUSÕES");
                                     int opcMenuExcluir;
-                                    
+
                                     do {
-                                        opcMenuExcluir = this.menuExcluir();
+                                        opcMenuExcluir = this.menuExcluir(); // Chama o menu de exclusões
+                                        if (opcMenuExcluir == 9) {
+                                            System.out.println("\n Você escolheu sair do menu de exclusões.");
+                                            break;  // Sai do loop se o usuário escolher a opção 9
+                                        }
+
+                                        // Processa a opção escolhida
                                         switch(opcMenuExcluir) {
                                             case 1:
-                                                //EXCLUIR PESSOA
-                                                if(this.excluirPessoa()){
-                                                      System.out.println("\n Pessoa excluido com sucesso");
+                                                // EXCLUIR PESSOA
+                                                if (this.excluirPessoa()) {
+                                                    System.out.println("\n Pessoa excluída com sucesso");
                                                 }
                                                 break;
                                             case 2:
-                                                //EXCLUIR USUARIO
-                                                if(this.excluirUsuario()) {
-                                                    System.out.println("\n Usuario excluido com sucesso");
-                                                } 
-                                                else {
-                                                    System.out.println("\n Não foi possivel excluir o usuario");  
+                                                // EXCLUIR USUÁRIO
+                                                if (this.excluirUsuario()) {
+                                                    System.out.println("\n Usuário excluído com sucesso");
+                                                } else {
+                                                    System.out.println("\n Não foi possível excluir o usuário");
                                                 }
                                                 break;
                                             case 3:
-                                                //EXCLUIR CONVITE INDIVIDUAL
-                                                if(this.excluirConviteIndividual()) {
-                                                    System.out.println("\n Convite Individual excluido com sucesso");
-                                                }
-                                                else {
-                                                    System.out.println("\n Nao foi possivel excluir o convite individual");
+                                                // EXCLUIR CONVITE INDIVIDUAL
+                                                if (this.excluirConviteIndividual()) {
+                                                    System.out.println("\n Convite Individual excluído com sucesso");
+                                                } else {
+                                                    System.out.println("\n Não foi possível excluir o convite individual");
                                                 }
                                                 break;
                                             case 4:
-                                                //EXCLUIR CONVITE FAMILIA
-                                                if(this.excluirConviteFamilia()) {
-                                                    System.out.println("\n Convite Familia excluido com sucesso");
-                                                }
-                                                else {
-                                                    System.out.println("\n Nao foi possivel excluir o convite familia");
+                                                // EXCLUIR CONVITE FAMÍLIA
+                                                if (this.excluirConviteFamilia()) {
+                                                    System.out.println("\n Convite Família excluído com sucesso");
+                                                } else {
+                                                    System.out.println("\n Não foi possível excluir o convite família");
                                                 }
                                                 break;
                                             case 5:
-                                                //EXCLUIR FORNECEDOR
-                                                if(this.excluirFornecedor()){
-                                                    System.out.println("\n Fornecedor excluido com sucesso");
-                                                }
-                                                else{
-                                                    System.out.println("\n Nao foi possivel excluir o fornecedor");
+                                                // EXCLUIR FORNECEDOR
+                                                if (this.excluirFornecedor()) {
+                                                    System.out.println("\n Fornecedor excluído com sucesso");
+                                                } else {
+                                                    System.out.println("\n Não foi possível excluir o fornecedor");
                                                 }
                                                 break;
                                             case 6:
-                                                //EXCLUIR PAGAMENTO
+                                                // EXCLUIR PAGAMENTO
+                                                if (this.excluirPagamento()) {
+                                                    System.out.println("\n Pagamento excluído com sucesso");
+                                                } else {
+                                                    System.out.println("\n NÃO foi possível excluir o pagamento");
+                                                }
                                                 break;
                                             case 7:
-                                                //EXCLUIR PRESENTE
-                                                if(this.excluirPresente()) {
-                                                    System.out.println("\n Presente excluido com sucesso");
-                                                }
-                                                else {
-                                                    System.out.println("\n Nao foi possivel excluir o presente");
+                                                // EXCLUIR PRESENTE
+                                                if (this.excluirPresente()) {
+                                                    System.out.println("\n Presente excluído com sucesso");
+                                                } else {
+                                                    System.out.println("\n Não foi possível excluir o presente");
                                                 }
                                                 break;
                                             case 8:
-                                                //EXCLUIR RECADO
-                                                if(this.excluirRecado()) {
-                                                    System.out.println("\n Reacdo excluido com sucesso");
-                                                }
-                                                else {
-                                                    System.out.println("\n Nao foi possivel excluir o recado");
+                                                // EXCLUIR RECADO
+                                                if (this.excluirRecado()) {
+                                                    System.out.println("\n Recado excluído com sucesso");
+                                                } else {
+                                                    System.out.println("\n Não foi possível excluir o recado");
                                                 }
                                                 break;
                                             default:
-                                                if(opcMenuExcluir != 9){
-                                                    System.out.println("\n\n Opcao Invalida! Tente Novamente!");
-                                                }
-                                                
+                                                System.out.println("\n\n Opção Inválida! Tente Novamente!");
                                                 break;
                                         }
-                                    }while(opcMenuExcluir != 9);
-                                
-                                default:
-                                    if(opcaoLogadoNoivo!=10){
-                                        System.out.println("\n\n Opcao Invalida! Tente Novamente!");
-                                    }  
-                                    break;
-                            }
-                        }while (opcaoLogadoNoivo != 11);
+                                    } while (opcMenuExcluir != 9); 
+
+                                    default:
+                                        if(opcaoLogadoNoivo!=11){
+                                            System.out.println("\n\n Opcao Invalida! Tente Novamente!");
+                                        }  
+                                        break;
+                                }
+                            }while (opcaoLogadoNoivo != 11);
                         
                     } else {
                         //LOGADO COMO OUTRO
@@ -555,17 +557,20 @@ public class GerenciadorDeCasamento {
         builder.append("\n 7 - EXCLUIR PRESENTE....................");
         builder.append("\n 8 - EXCLUIR RECADO......................");
         builder.append("\n 9 - SAIR................................");
-        builder.append("\n\n SUA OPCAO: ");
         System.out.print(builder.toString());
         
+        int opcao = -1;
+        while (opcao == -1) { // Continua até que uma entrada válida seja recebida
+        System.out.print("\n Digite sua opcao: ");
         try {
-            return Integer.parseInt(scanner.nextLine());
+            opcao = Integer.parseInt(scanner.nextLine());
         } catch (NumberFormatException e) {
-            System.out.println("Caracter Invalido! Insira um Numero!");
-            return -1;
+            System.out.println("Caractere Invalido! Insira um Número!");
         }
     }
-
+    return opcao;
+    }
+    
     private Fornecedor criarFornecedor() {
         
         Fornecedor f = new Fornecedor();
@@ -1048,13 +1053,21 @@ public class GerenciadorDeCasamento {
         long idFornecedor = scanner.nextLong();
         if(fornecedorDAO.buscarPorId(idFornecedor)){
             //APAGAR OS PAGAMENTOS LINKADOS AO FORNECEDOR
-            PagamentoDAO pTemporario = fornecedorDAO.removerPagamentos(idFornecedor);
+            //RECEBER O ARRAY DAS PARCELAS DO FORNECEDOR PARA EXCLUIR NO CALENDÁRIO
+            
+            PagamentoDAO pTemporario = fornecedorDAO.getPagamentos(idFornecedor);
             if(pTemporario != null){
                 int tamanho = pTemporario.getPagamentos().size();
                 int i = 0;
                 while(i < tamanho-1){
                     long idTemporario = pTemporario.getPagamentos().get(i).getId();
-                    
+                    if(calendario.excluirPagamento(idTemporario)){
+                        System.out.println("Pagamento de fornecedor excluido com sucesso");
+                    }
+                    else{
+                        System.out.println("Erro ao excluir o pagamento do fornecedor");
+                    }
+                    i++;
                 }
             }
             return fornecedorDAO.removerPorId(idFornecedor);
@@ -1062,6 +1075,34 @@ public class GerenciadorDeCasamento {
         else{
             return false;
         }
+    }
+    
+    private boolean excluirPagamento(){
+        System.out.println(calendario);
+        System.out.println("Qual o id da PRIMEIRA PARCELA do pagamento que deseja excluir?");
+        long idPagamento = scanner.nextLong();
+        Pagamento pTemporario = calendario.getPagamentoPeloId(idPagamento);
+        if(pTemporario != null){
+            if(pTemporario.getParcelaAtual() == 1){
+                int cont = 0;
+                for(int i = 0; i<pTemporario.getParcelaTotal();i++){
+                    if(calendario.excluirPagamento(idPagamento+i)){
+                        System.out.println("Parcela: "+ (idPagamento + i) +" removida");
+                        cont++;
+                    }
+                }
+                if(cont!= 0){
+                    return true;
+                }
+            }
+            else{
+                System.out.println("Nao eh a primeira parcela");
+            }
+        }
+        else{
+            System.out.println("O id eh invalido...");
+        }
+        return false;
     }
     
     private boolean excluirPresente() {
