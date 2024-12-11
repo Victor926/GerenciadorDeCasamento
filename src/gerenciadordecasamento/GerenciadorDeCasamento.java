@@ -32,22 +32,24 @@ public class GerenciadorDeCasamento {
     public GerenciadorDeCasamento() {
         
         System.out.println("\n CRIACAO DO NOIVO...");
-        Pessoa noivo = this.criarPessoa();
+        Pessoa noivo = pessoaDAO.criarPessoa();
         System.out.println("\n Qual o login do Noivo: ");
         String loginNoivo = scanner.nextLine();
         System.out.println("\n Qual a senha do Noivo: ");
         String senhaNoivo = scanner.nextLine();
         Usuario usuarioNoivo = new Usuario(noivo, loginNoivo, senhaNoivo);
-        usuarioDAO.adiciona(usuarioNoivo);
+        usuarioDAO.adicionaNoArrayList(usuarioNoivo);
+        usuarioDAO.adicionarNoBD(usuarioNoivo);
         
         System.out.println("\n\nCRIACAO DA NOIVA...");
-        Pessoa noiva = this.criarPessoa();
+        Pessoa noiva = pessoaDAO.criarPessoa();
         System.out.println("\n Qual o login do Noiva:");
         String loginNoiva = scanner.nextLine();
         System.out.println("\n Qual a senha do Noiva:");
         String senhaNoiva = scanner.nextLine();
         Usuario usuarioNoiva = new Usuario(noiva, loginNoiva, senhaNoiva);
-        usuarioDAO.adiciona(usuarioNoiva);
+        usuarioDAO.adicionaNoArrayList(usuarioNoiva);
+        usuarioDAO.adicionarNoBD(usuarioNoiva);
         
         //AMBIENTE DE TESTES
         /*Fornecedor fornecedorTemporarioLogado = this.criarFornecedor();
@@ -83,11 +85,11 @@ public class GerenciadorDeCasamento {
                             switch (opcaoLogadoNoivo) {
                                 case 1:
                                     System.out.println("\n\n Voce escolheu: 1 - CADASTRAR PESSOA \n");
-                                    this.criarPessoa();
+                                    pessoaDAO.criarPessoa();
                                     break;
                                 case 2:
                                     System.out.println("\n\n Voce escolheu: 2 - CADASTRAR USUARIO \n");
-                                    this.criarUsuario();
+                                    usuarioDAO.criarUsuario();
                                     break;
                                 case 3:
                                     System.out.println("\n\n Voce escolheu: 3 - CADASTRAR FORNECEDOR \n");
@@ -289,7 +291,13 @@ public class GerenciadorDeCasamento {
                         switch(opcaoEntrarSemLogar) {
                             case 1:
                             System.out.println("\n\n Voce escolheu: 1 - CADASTRAR PRESENTE \n");
-                            this.selecionarPresente();
+                            long id_pessoa;
+                            long id_presente;
+                            System.out.println("\n Qual o id da pessoa que quer seleciona-lo? ");
+                            id_pessoa = scanner.nextLong();
+                            System.out.println("\n Qual o id da presente que quer seleciona? ");
+                            id_presente = scanner.nextLong();
+                            presenteDAO.declararPresente(id_presente, id_pessoa);
                             break;
                         case 2:
                             System.out.println("\n\n Voce escolheu: 2 - CADASTRAR RECADO \n");
@@ -338,111 +346,10 @@ public class GerenciadorDeCasamento {
         }
     }
     //============================== CRIAÇÕES ===============================================
-    private Pessoa criarPessoa() {
-        
-        Pessoa p = new Pessoa();
-        
-        //RECEBENDO OS ATRIBUTOS
-        //NOME
-        System.out.println("Qual o nome: ");
-        p.setNome(scanner.nextLine());
-        // NASCIMENTO
-        LocalDate dataNascimento = null;
-        while (dataNascimento == null) {
-            System.out.println("Qual a data de nascimento: (dd/mm/yyyy):");
-            String dataNaoFormatada = scanner.nextLine();
-            try {
-                dataNascimento = LocalDate.parse(dataNaoFormatada, formato);
-            } catch (DateTimeParseException e) {
-                System.out.println("Data invalida! Tente novamente no formato (dd/mm/yyyy):");
-            }
-        }
-        p.setDataNascimento(dataNascimento);
-       //TELEFONE
-       String telefone = null;
-       int flag = 0;
-       while(flag == 0)
-       {
-            System.out.println("Qual o telefone (xx-xxxxx-xxxx)");
-            telefone = scanner.nextLine();
-            if (!telefone.matches("\\d{2}-\\d{5}-\\d{4}")) {
-                System.out.println("Telefone invalido! Use o formato (xx-xxxxx-xxxx):");
-            } else {
-                p.setTelefone(telefone);
-                flag = 1;
-            }
-       }
+    
 
-        //ADICIONANDO A PESSOA
-        if (pessoaDAO.adiciona(p)) {
-            System.out.println("\nPessoa Adicionada! \n\n");
-            System.out.println(p.toString());
-            return p;
-        } else {
-            System.out.println("\n NAO foi possivel adicionar a pessoa! \n\n");
-            return null;
-        }
-    }
     
     
-    public Usuario criarUsuario() {
-    
-        Usuario u = new Usuario();
-        Pessoa pessoa = null;
-        //VERIFICANDO SE A PESSOA EXISTE
-            System.out.print("\nPara adicionar um Usuario, eh preciso que esse ja seja uma pessoa.\n" + 
-                             "Informe o ID da pessoa: ");
-            long idPessoa = scanner.nextLong();
-            scanner.nextLine();
-            pessoa = pessoaDAO.buscaPorId(idPessoa);
-            
-        if (pessoa != null) {
-
-            //RECEBENDO ATRIBUTOS
-            //PESSOA
-            u.setPessoa(pessoa);
-            //TIPO
-            String tipo;
-            do {
-                System.out.print("Informe o tipo de usuario [CE - cerimonialista, CO - Convidado]: ");
-                tipo = scanner.nextLine().toUpperCase();
-            } while (!tipo.equals("CE") && !tipo.equals("CO"));
-            u.setTipo(tipo);
-            // LOGIN
-            boolean loginDisponivel;
-            String login;
-            do {
-                System.out.print("Qual o login: ");
-                login = scanner.nextLine();
-
-                loginDisponivel = usuarioDAO.buscaPorLogin(login) == null;
-
-                if (!loginDisponivel) {
-                    System.out.println("Login ja existe! Tente outro!");
-                }
-            } while (!loginDisponivel);
-            u.setLogin(login);
-            //SENHA
-            System.out.print("Qual a senha: ");
-            String senha = scanner.nextLine(); 
-            u.setSenha(senha);
-
-            // ADICIONANDO O USUARIO
-            if (usuarioDAO.adiciona(u)) {
-                System.out.println("\nUsuario Adicionado! \n\n");
-                System.out.println(u.toString());
-                return u;
-            } else {
-                System.out.println("\nNAO foi possivel adicionar o usuario! \n\n");
-                return null;
-            }
-        } else {
-            System.out.println("Pessoa NAO encontrada! Tente novamente!");
-            return null;
-        }
-        
-
-    }
     
     private Usuario verificarUsuarioLogado() {
         
@@ -568,7 +475,67 @@ public class GerenciadorDeCasamento {
             System.out.println("Caractere Invalido! Insira um Número!");
         }
     }
+<<<<<<< Updated upstream
     return opcao;
+=======
+
+    
+    public Usuario criarUsuario() {
+    
+        Usuario u = new Usuario();
+        Pessoa pessoa = null;
+        //VERIFICANDO SE A PESSOA EXISTE
+            System.out.print("\nPara adicionar um Usuario, eh preciso que esse ja seja uma pessoa.\n" + 
+                             "Informe o ID da pessoa: ");
+            long idPessoa = scanner.nextLong();
+            scanner.nextLine();
+            pessoa = pessoaDAO.buscaPorId(idPessoa);
+            
+        if (pessoa != null) {
+
+            //RECEBENDO ATRIBUTOS
+            //PESSOA
+            u.setPessoa(pessoa);
+            //TIPO
+            String tipo;
+            do {
+                System.out.print("Informe o tipo de usuario [CE - cerimonialista, CO - Convidado]: ");
+                tipo = scanner.nextLine().toUpperCase();
+            } while (!tipo.equals("CE") && !tipo.equals("CO"));
+            u.setTipo(tipo);
+            // LOGIN
+            boolean loginDisponivel;
+            String login;
+            do {
+                System.out.print("Qual o login: ");
+                login = scanner.nextLine();
+
+                loginDisponivel = usuarioDAO.buscaPorLogin(login) == null;
+
+                if (!loginDisponivel) {
+                    System.out.println("Login ja existe! Tente outro!");
+                }
+            } while (!loginDisponivel);
+            u.setLogin(login);
+            //SENHA
+            System.out.print("Qual a senha: ");
+            String senha = scanner.nextLine(); 
+            u.setSenha(senha);
+
+            // ADICIONANDO O USUARIO
+            if (usuarioDAO.adicionaNoArrayList(u)) {
+                System.out.println("\nUsuario Adicionado! \n\n");
+                System.out.println(u.toString());
+                return u;
+            } else {
+                System.out.println("\nNAO foi possivel adicionar o usuario! \n\n");
+                return null;
+            }
+        } else {
+            System.out.println("Pessoa NAO encontrada! Tente novamente!");
+            return null;
+        }
+>>>>>>> Stashed changes
     }
     
     private Fornecedor criarFornecedor() {
@@ -653,9 +620,15 @@ public class GerenciadorDeCasamento {
         //PESSOA
         p.setPessoa(null);
         // ADICIONANDO O PRESENTE
-        if (presenteDAO.adicionar(p)) {
+        if (presenteDAO.adicionarNoArrayList(p)) {
             System.out.println("\nPRESENTE Adicionado! \n\n");
             System.out.println(p.toString());
+            if (presenteDAO.adicionar(p)) {
+                System.out.println("\n PRESENTE adicionado no banco de dados!");
+            }
+            else {
+                System.out.println("\n NAO foi possivel adicionar presente no Banco de Dados");
+            }
             return p;
         } else {
             System.out.println("\nNAO foi possivel adicionar o PRESENTE! \n\n");
