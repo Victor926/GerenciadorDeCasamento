@@ -149,5 +149,9 @@ public class ConvidadoIndividualDAO {
         return cont != 0;
     }
 
+    public ArrayList<ConvidadoIndividual> getConvidadosIndividuais() {
+        return convidadosIndividuais;
+    }
+
 }
 

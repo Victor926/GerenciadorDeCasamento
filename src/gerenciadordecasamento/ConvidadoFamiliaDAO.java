@@ -95,6 +95,10 @@ public class ConvidadoFamiliaDAO {
         return false;
     }
 
+    public ArrayList<ConvidadoFamilia> getFamilias() {
+        return familias;
+    }
+
 
 }
 

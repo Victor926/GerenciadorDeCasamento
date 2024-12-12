@@ -26,51 +26,7 @@ public class PessoaDAO {
 
     private Scanner scanner = new Scanner(System.in);
     DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    
-    public Pessoa criarPessoa() {
-        Pessoa p = new Pessoa();
-
-        // RECEBENDO OS ATRIBUTOS
-        // Nome
-        System.out.println("Qual o nome: ");
-        p.setNome(scanner.nextLine());
-
-        // Data de Nascimento
-        LocalDate dataNascimento = null;
-        while (dataNascimento == null) {
-            System.out.println("Qual a data de nascimento (dd/mm/yyyy):");
-            String dataNaoFormatada = scanner.nextLine();
-            try {
-                dataNascimento = LocalDate.parse(dataNaoFormatada, formato);
-            } catch (DateTimeParseException e) {
-                System.out.println("Data inválida! Tente novamente no formato (dd/mm/yyyy):");
-            }
-        }
-        p.setDataNascimento(dataNascimento);
-
-        // Telefone
-        String telefone = null;
-        while (true) {
-            System.out.println("Qual o telefone (xx-xxxxx-xxxx):");
-            telefone = scanner.nextLine();
-            if (!telefone.matches("\\d{2}-\\d{5}-\\d{4}")) {
-                System.out.println("Telefone inválido! Use o formato (xx-xxxxx-xxxx):");
-            } else {
-                p.setTelefone(telefone);
-                break;
-            }
-        }
-
-        // Adicionando a Pessoa no Banco de Dados
-        if (adicionarNoBD(p) && adicionaNoArrayList(p)) {
-            System.out.println("\nPessoa adicionada com sucesso!\n");
-            System.out.println(p);
-            return p;
-        } else {
-            System.out.println("\nNão foi possível adicionar a pessoa!\n");
-            return null;
-        }
-    }
+   
     
     public boolean adicionarNoBD(Pessoa pessoa) {
         String sql = "INSERT INTO pessoa (nome, dataNascimento, telefone, dataCriacao, dataModificacao) VALUES (?, ?, ?, CURRENT_DATE, CURRENT_DATE)";

@@ -27,29 +27,30 @@ public class GerenciadorDeCasamento {
     ConvidadoFamiliaDAO convidadoFamiliaDAO = new ConvidadoFamiliaDAO();
     ConvidadoIndividualDAO convidadoIndividualDAO = new ConvidadoIndividualDAO();
     Evento evento = new Evento();
+    Relatorio relatorio = new Relatorio();
     DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private Calendario calendario = new Calendario();
     public GerenciadorDeCasamento() {
         
         System.out.println("\n CRIACAO DO NOIVO...");
-        Pessoa noivo = pessoaDAO.criarPessoa();
+        Pessoa noivo = criarPessoa();
         System.out.println("\n Qual o login do Noivo: ");
         String loginNoivo = scanner.nextLine();
         System.out.println("\n Qual a senha do Noivo: ");
         String senhaNoivo = scanner.nextLine();
         Usuario usuarioNoivo = new Usuario(noivo, loginNoivo, senhaNoivo);
         usuarioDAO.adicionaNoArrayList(usuarioNoivo);
-        usuarioDAO.adicionarNoBD(usuarioNoivo);
+        //usuarioDAO.adicionarNoBD(usuarioNoivo);
         
         System.out.println("\n\nCRIACAO DA NOIVA...");
-        Pessoa noiva = pessoaDAO.criarPessoa();
+        Pessoa noiva = criarPessoa();
         System.out.println("\n Qual o login do Noiva:");
         String loginNoiva = scanner.nextLine();
         System.out.println("\n Qual a senha do Noiva:");
         String senhaNoiva = scanner.nextLine();
         Usuario usuarioNoiva = new Usuario(noiva, loginNoiva, senhaNoiva);
         usuarioDAO.adicionaNoArrayList(usuarioNoiva);
-        usuarioDAO.adicionarNoBD(usuarioNoiva);
+        //usuarioDAO.adicionarNoBD(usuarioNoiva);
         
         //AMBIENTE DE TESTES
         /*Fornecedor fornecedorTemporarioLogado = this.criarFornecedor();
@@ -85,11 +86,11 @@ public class GerenciadorDeCasamento {
                             switch (opcaoLogadoNoivo) {
                                 case 1:
                                     System.out.println("\n\n Voce escolheu: 1 - CADASTRAR PESSOA \n");
-                                    pessoaDAO.criarPessoa();
+                                    criarPessoa();
                                     break;
                                 case 2:
                                     System.out.println("\n\n Voce escolheu: 2 - CADASTRAR USUARIO \n");
-                                    usuarioDAO.criarUsuario();
+                                    criarUsuario();
                                     break;
                                 case 3:
                                     System.out.println("\n\n Voce escolheu: 3 - CADASTRAR FORNECEDOR \n");
@@ -124,26 +125,31 @@ public class GerenciadorDeCasamento {
                                         opcMenuRelatorios = this.menuRelatorios();
                                         switch(opcMenuRelatorios) {
                                             case 1:
-                                                recadoDAO.mostrar();
+                                                relatorio.gerarRelatorioRecados(recadoDAO.getRecados(), "C:\\Users\\Ruam\\Desktop\\relatorio_recados.pdf" );
                                                 break;
                                             case 2:
                                                 //GERAR CONVITE INDIVIDUAL
                                                 this.imprimirConviteIndividual();
+                                                relatorio.gerarConvitesIndividuais(convidadoIndividualDAO.getConvidadosIndividuais(), pessoaDAO.getNomePessoa(0), pessoaDAO.getNomePessoa(1), "C:\\Users\\Ruam\\Desktop\\relatorio_conviteIndividual.pdf");
                                                 break;
                                             case 3:
                                                 //GERAR CONVITE FAMILIA
                                                 this.imprimirConviteFamilia();
+                                                relatorio.gerarConvitesFamiliares(convidadoFamiliaDAO.getFamilias(), pessoaDAO.getNomePessoa(0), pessoaDAO.getNomePessoa(1), "C:\\Users\\Ruam\\Desktop\\relatorio_conviteFamilia.pdf");
                                                 break;
                                             case 4:
                                                 System.out.println(this.calendario.relatorioPagamentosNoivos(0, 1));
+                                                relatorio.gerarRelatorioPagamentosNoivos(calendario.getPagamentos(), 0, 1, "C:\\Users\\Ruam\\Desktop\\relatorio_pagamento_noivos.pdf");
                                                 break;
                                             case 5:
                                                 //LISTA DE CONVIDADOS
                                                 this.listaConvidados();
+                                                relatorio.gerarRelatorioConvidadosIndividuais(convidadoIndividualDAO.getConvidadosIndividuais(), "C:\\Users\\Ruam\\Desktop\\relatorio_convidados_individuais.pdf");
                                                 break;
                                             case 6:
                                                 //LISTA DE CONVIDADOS CONFIRMADOS
                                                 this.gerarRelatorioConvidadosConfirmados();
+                                                relatorio.gerarRelatorioConvidadosConfirmados(convidadoIndividualDAO, fornecedorDAO.getFornecedores(), "C:\\Users\\Ruam\\Desktop\\relatorio_convidados_confirmados.pdf");
                                                 break;
                                             default:
                                                 if(opcMenuRelatorios!=7){
@@ -475,10 +481,62 @@ public class GerenciadorDeCasamento {
             System.out.println("Caractere Invalido! Insira um Número!");
         }
     }
-<<<<<<< Updated upstream
-    return opcao;
-=======
+        return opcao;
+    }
 
+    
+    public Pessoa criarPessoa() {
+        Pessoa p = new Pessoa();
+
+        // RECEBENDO OS ATRIBUTOS
+        // Nome
+        System.out.println("Qual o nome: ");
+        p.setNome(scanner.nextLine());
+
+        // Data de Nascimento
+        LocalDate dataNascimento = null;
+        while (dataNascimento == null) {
+            System.out.println("Qual a data de nascimento (dd/mm/yyyy):");
+            String dataNaoFormatada = scanner.nextLine();
+            try {
+                dataNascimento = LocalDate.parse(dataNaoFormatada, formato);
+            } catch (DateTimeParseException e) {
+                System.out.println("Data inválida! Tente novamente no formato (dd/mm/yyyy):");
+            }
+        }
+        p.setDataNascimento(dataNascimento);
+
+        // Telefone
+        String telefone = null;
+        while (true) {
+            System.out.println("Qual o telefone (xx-xxxxx-xxxx):");
+            telefone = scanner.nextLine();
+            if (!telefone.matches("\\d{2}-\\d{5}-\\d{4}")) {
+                System.out.println("Telefone inválido! Use o formato (xx-xxxxx-xxxx):");
+            } else {
+                p.setTelefone(telefone);
+                break;
+            }
+        }
+
+        // Adicionando a Pessoa no Banco de Dados
+        /*if (adicionarNoBD(p) && adicionaNoArrayList(p)) {
+        System.out.println("\nPessoa adicionada com sucesso!\n");
+        System.out.println(p);
+        return p;
+        } else {
+        System.out.println("\nNão foi possível adicionar a pessoa!\n");
+        return null;
+        }*/
+        if (pessoaDAO.adicionaNoArrayList(p)) {
+            System.out.println("\nPessoa adicionada com sucesso!\n");
+            System.out.println(p);
+            return p;
+        } else {
+            System.out.println("\nNão foi possível adicionar a pessoa!\n");
+            return null;
+        }
+    }
     
     public Usuario criarUsuario() {
     
@@ -535,7 +593,6 @@ public class GerenciadorDeCasamento {
             System.out.println("Pessoa NAO encontrada! Tente novamente!");
             return null;
         }
->>>>>>> Stashed changes
     }
     
     private Fornecedor criarFornecedor() {

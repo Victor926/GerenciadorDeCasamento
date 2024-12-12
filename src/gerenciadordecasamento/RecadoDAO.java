@@ -14,6 +14,10 @@ public class RecadoDAO {
 
     private ArrayList<Recado> recados = new ArrayList<>();
 
+    public ArrayList<Recado> getRecados() {
+        return recados;
+    }
+
     public boolean adiciona(Recado recado) {
         return recados.add(recado); // O método add do ArrayList já gerencia a adição
     }
